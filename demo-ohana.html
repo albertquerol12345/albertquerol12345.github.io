@@ -573,28 +573,32 @@
     </div>
 
     <script>
-        // Menú real (frontend/data/burgers.json)
-        const menuItems = [
-            { key: "Big Ohana", display: "La Big Ohana", price: 12.40, icon: "🍔", ingredients: ["Cheddar", "cebolla", "lechuga", "pepinillo", "salsa big ohana"] },
-            { key: "Boo", display: "La Boo", price: 12.40, icon: "🍔", ingredients: ["Cheddar", "salsa boloñesa"] },
-            { key: "Cobra", display: "La Cobra", price: 11.90, icon: "🍔", ingredients: ["Ternera", "queso de cabra", "gorgonzola", "cheddar", "salsa 4 quesos"] },
-            { key: "Dormilona", display: "La Dormilona", price: 11.40, icon: "🍔", ingredients: ["Ternera", "queso de cabra", "cebolla caramelizada", "rúcula"] },
-            { key: "Feliz", display: "La Feliz", price: 11.30, icon: "🍔", ingredients: ["Ternera", "cheddar", "lechuga", "tomate", "cebolla", "pepinillo"] },
-            { key: "Fiona", display: "La Fiona", price: 11.90, icon: "🍔", ingredients: ["Ternera", "queso semi curado", "sobrasada", "miel"] },
-            { key: "Grunona", display: "La Gruñona", price: 11.30, icon: "🍔", ingredients: ["Ternera", "cheddar", "bacon", "jalapeño", "salsa picante"] },
-            { key: "Lilo", display: "La Lilo", price: 12.50, icon: "🍔", ingredients: ["Ternera", "cheddar", "pulled pork", "bacon", "salsa barbacoa"] },
-            { key: "Monumental", display: "La Monumental", price: 16.90, icon: "🍔", ingredients: ["Pan brioche domme", "hamburguesa de vaca rubia gallega madurada 30 días", "queso raclette fundido", "rabo de toro al vino tinto", "arena de guanciale crujiente", "rúcula fresca", "salsa Big Ohana con pepinillo y cebolla"] },
-            { key: "Mudita", display: "La Mudita", price: 9.90, icon: "🍔", ingredients: ["Ternera", "cheddar", "bacon", "huevo"] },
-            { key: "Mulan", display: "La Mulan", price: 11.90, icon: "🍔", ingredients: ["Pollo panko", "salsa teriyaki", "col", "zanahoria", "mayonesa"] },
-            { key: "Ohana", display: "La Ohana", price: 13.90, icon: "🍔", ingredients: ["Ternera", "foie", "mermelada de frutos rojos", "queso de cabra", "cebolla caramelizada", "rúcula"] },
-            { key: "Sabia", display: "La Sabia", price: 12.40, icon: "🍔", ingredients: ["Ternera", "queso de cabra", "cebolla caramelizada", "jamón ibérico", "salsa de bacon ahumado"] },
-            { key: "Stich", display: "La Stich", price: 11.90, icon: "🍔", ingredients: ["Ternera", "cheddar", "huevo frito", "guacamole"] },
-            { key: "Sully", display: "La Sully", price: 11.90, icon: "🍔", ingredients: ["Cheddar", "bacon"] },
-            { key: "Tartufo", display: "La Tartufo", price: 12.40, icon: "🍔", ingredients: ["Ternera", "queso semi curado", "champiñones", "mayonesa trufada"] },
-            { key: "Timida", display: "La Tímida", price: 10.90, icon: "🍔", ingredients: ["Pollo rebozado", "tomate", "lechuga", "mayonesa"] },
-            { key: "Vegana", display: "La Vegana", price: 10.40, icon: "🥬", ingredients: ["Hamburguesa vegana", "lechuga", "tomate", "cebolla", "pepinillo"] },
-            { key: "Wazoski", display: "La Wazoski", price: 11.90, icon: "🍔", ingredients: ["Cheddar", "cebolla", "pepinillo"] }
-        ];
+        // Menú real (landing/data/burgers.json), sincronizado del repo OHANA_VOICE_PUBLIC
+        let menuItems = [];
+
+        async function loadMenu() {
+            const grid = document.getElementById('menuGrid');
+            try {
+                const res = await fetch('data/burgers.json');
+                const data = await res.json();
+                const burgers = Array.isArray(data) ? data : (data.burgers || []);
+                menuItems = burgers.map((b) => {
+                    const aliases = [b.key, b.display, b.menu_name].filter(Boolean);
+                    return {
+                        key: b.key,
+                        display: b.menu_name || b.display || b.key,
+                        price: typeof b.price === 'number' ? b.price : 0,
+                        icon: b.key === 'Vegana' ? '🥬' : '🍔',
+                        ingredients: Array.isArray(b.ingredients) ? b.ingredients : [],
+                        aliases
+                    };
+                });
+                renderMenu();
+            } catch (err) {
+                console.error('No se pudo cargar el menú real:', err);
+                grid.innerHTML = '<div style="color:#94a3b8; padding:12px; text-align:center;">No se pudo cargar el menú real (data/burgers.json).</div>';
+            }
+        }
 
         let order = [];
         let currentExtras = [];
@@ -647,8 +651,7 @@
             }
 
             const match = menuItems.find(item =>
-                lower.includes(item.key.toLowerCase()) ||
-                lower.includes(item.display.toLowerCase())
+                item.aliases.some(alias => lower.includes(alias.toLowerCase()))
             );
             if (match) {
                 addToOrder(menuItems.indexOf(match));
@@ -750,7 +753,7 @@
             return new Promise(resolve => setTimeout(resolve, ms));
         }
 
-        renderMenu();
+        loadMenu();
     </script>
 </body>
 
