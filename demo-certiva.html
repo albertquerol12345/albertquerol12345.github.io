@@ -94,7 +94,7 @@
             color: #38bdf8;
         }
         
-        /* Facturas de ejemplo reales de Albert */
+        /* Facturas de ejemplo (dataset demo) */
         .facturas-lista {
             margin-top: 16px;
         }
@@ -270,7 +270,10 @@
 <body>
     <div class="container">
         <h1>🧾 Certiva - Pipeline de Facturas</h1>
-        <p class="subtitle">Procesa facturas reales: Azure OCR → Reglas → CSV (a3innuva)</p>
+        <p class="subtitle">Procesa facturas de demo (tests/golden): Azure OCR → Reglas → CSV (a3innuva)</p>
+        <p style="margin: 8px 0 18px; color: #94a3b8; font-size: 0.85rem;">
+            ⚠️ Demo visual con datos simulados. Los nombres de archivo corresponden al dataset real.
+        </p>
         
         <!-- Pipeline -->
         <div class="pipeline">
@@ -308,32 +311,32 @@
                     <div class="factura-item selected" onclick="selectFactura(0)" id="factura-0">
                         <span class="factura-icon">📄</span>
                         <div class="factura-info">
-                            <div class="factura-nombre">IBERDROLA_SUMINISTRO_FEB</div>
-                            <div class="factura-meta">A12345678 • IB-2025-0210</div>
+                            <div class="factura-nombre">golden_01_suministro_iberdrola.pdf</div>
+                            <div class="factura-meta">tests/golden/ • demo</div>
                         </div>
                         <span class="factura-importe">€218.41</span>
                     </div>
                     <div class="factura-item" onclick="selectFactura(1)" id="factura-1">
                         <span class="factura-icon">📄</span>
                         <div class="factura-info">
-                            <div class="factura-nombre">MICROSOFT_365_LIC</div>
-                            <div class="factura-meta">B82387121 • MS-2025-9087</div>
+                            <div class="factura-nombre">golden_07_software_m365.pdf</div>
+                            <div class="factura-meta">tests/golden/ • demo</div>
                         </div>
                         <span class="factura-importe">€387.20</span>
                     </div>
                     <div class="factura-item" onclick="selectFactura(2)" id="factura-2">
                         <span class="factura-icon">📄</span>
                         <div class="factura-info">
-                            <div class="factura-nombre">CONSULTORES_CLOUD</div>
-                            <div class="factura-meta">A55667788 • CC-2025-012</div>
+                            <div class="factura-nombre">golden_09_servicio_consultoria.pdf</div>
+                            <div class="factura-meta">tests/golden/ • demo</div>
                         </div>
                         <span class="factura-importe">€1,815.00</span>
                     </div>
                     <div class="factura-item" onclick="selectFactura(3)" id="factura-3">
                         <span class="factura-icon">📄</span>
                         <div class="factura-info">
-                            <div class="factura-nombre">ASESORES_MADRID_SL</div>
-                            <div class="factura-meta">B44556677 • ASE-2025-045</div>
+                            <div class="factura-nombre">golden_10_servicio_asesoria.pdf</div>
+                            <div class="factura-meta">tests/golden/ • demo</div>
                         </div>
                         <span class="factura-importe">€508.20</span>
                     </div>
@@ -358,6 +361,9 @@
             <div class="resultado-header">
                 <span class="resultado-titulo">✅ Factura Procesada</span>
                 <span class="confianza-badge" id="confianzaBadge">94% Confianza</span>
+            </div>
+            <div style="color: #94a3b8; font-size: 0.8rem; margin-top: 6px;">
+                Valores de ejemplo (demo)
             </div>
             
             <div class="datos-extraidos" id="datosExtraidos">
@@ -393,59 +399,59 @@
     </div>
     
     <script>
-        // Datos reales de las facturas de Albert
+        // Datos simulados para la demo (archivos reales del dataset golden)
         const facturas = [
             {
                 archivo: 'golden_01_suministro_iberdrola.pdf',
-                proveedor: 'IBERDROLA SUMINISTRO ESPAÑA S.A.U.',
-                nif: 'A12345678',
-                numero: 'IB-2025-0210',
+                proveedor: 'Iberdrola (demo)',
+                nif: 'DEMO',
+                numero: 'DEMO-001',
                 fecha: '2025-02-10',
                 base: 180.50,
                 iva: 37.91,
                 total: 218.41,
-                categoria: 'Suministros eléctricos',
+                categoria: 'Suministros',
                 cuenta: '628000',
-                confianza: 94
+                confianza: 92
             },
             {
                 archivo: 'golden_07_software_m365.pdf',
-                proveedor: 'MICROSOFT IBERIA SRL',
-                nif: 'B82387121',
-                numero: 'MS-2025-9087',
+                proveedor: 'Microsoft 365 (demo)',
+                nif: 'DEMO',
+                numero: 'DEMO-002',
                 fecha: '2025-02-15',
                 base: 320.00,
                 iva: 67.20,
                 total: 387.20,
-                categoria: 'Software SaaS',
+                categoria: 'Software',
                 cuenta: '629000',
-                confianza: 97
+                confianza: 95
             },
             {
                 archivo: 'golden_09_servicio_consultoria.pdf',
-                proveedor: 'CONSULTORES CLOUD SA',
-                nif: 'A55667788',
-                numero: 'CC-2025-012',
+                proveedor: 'Consultoría (demo)',
+                nif: 'DEMO',
+                numero: 'DEMO-003',
                 fecha: '2025-01-29',
                 base: 1500.00,
                 iva: 315.00,
                 total: 1815.00,
-                categoria: 'Consultoría tecnológica',
+                categoria: 'Consultoría',
                 cuenta: '623000',
-                confianza: 91
+                confianza: 90
             },
             {
                 archivo: 'golden_10_servicio_asesoria.pdf',
-                proveedor: 'ASESORES MADRID SL',
-                nif: 'B44556677',
-                numero: 'ASE-2025-045',
+                proveedor: 'Asesoría (demo)',
+                nif: 'DEMO',
+                numero: 'DEMO-004',
                 fecha: '2025-02-05',
                 base: 420.00,
                 iva: 88.20,
                 total: 508.20,
-                categoria: 'Asesoría fiscal',
+                categoria: 'Asesoría',
                 cuenta: '623000',
-                confianza: 96
+                confianza: 94
             }
         ];
         

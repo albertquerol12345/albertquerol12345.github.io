@@ -24,14 +24,14 @@
         </h1>
         <p class="hero-subtitle">
           Demostraciones técnicas de arquitecturas Python para automatización.
-          <br>3+ años en operaciones QSR + Certificación SAP FI.
+          <br>Experiencia en operaciones QSR + Certificación SAP FI.
         </p>
         
         <div class="hero-cta">
           <a href="https://github.com/albertquerol12345" class="btn btn-primary" target="_blank">
             <span>Ver Proyectos en GitHub</span>
           </a>
-          <a href="mailto:albert.querol.beltran@gmail.com" class="btn btn-secondary">
+          <a href="mailto:albertquerol12345@gmail.com" class="btn btn-secondary">
             <span>Contactar</span>
           </a>
         </div>
@@ -42,16 +42,16 @@
             <span class="stat-label">Proyectos</span>
           </div>
           <div class="stat">
-            <span class="stat-number">40+</span>
-            <span class="stat-label">Tests</span>
-          </div>
-          <div class="stat">
             <span class="stat-number">34</span>
             <span class="stat-label">Facturas Demo</span>
           </div>
           <div class="stat">
-            <span class="stat-number">&lt;5min</span>
-            <span class="stat-label">Para Ejecutar</span>
+            <span class="stat-number">19</span>
+            <span class="stat-label">Items Menú</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">2</span>
+            <span class="stat-label">Imágenes Demo</span>
           </div>
         </div>
       </header>
@@ -96,17 +96,16 @@
                 <span class="demo-tag tag-blue">Pipeline OCR + Contabilidad</span>
               </div>
               <p class="demo-desc">
-                Pipeline completo de procesamiento de facturas: Azure Form Recognizer para OCR, 
-                motor de reglas deterministas, cola HITL (Human-in-the-Loop) para validación humana, 
-                y exportación a CSV compatible con a3innuva. Incluye circuit breakers, retry logic 
-                y audit trail completo en SQLite.
+                Pipeline local para procesamiento de facturas: OCR (Azure o dummy), reglas deterministas,
+                cola HITL (Human-in-the-Loop) para validación humana y exportación a CSV compatible con a3innuva.
+                Guarda estado y trazabilidad en SQLite.
               </p>
               <div class="demo-features">
                 <span class="feature">✓ 34 facturas de demo (tests/golden/)</span>
-                <span class="feature">✓ Azure Form Recognizer</span>
+                <span class="feature">✓ OCR Azure (opcional) + dummy</span>
                 <span class="feature">✓ Web UI para revisión HITL</span>
-                <span class="feature">✓ Circuit breakers & retries</span>
-                <span class="feature">✓ Multi-tenant</span>
+                <span class="feature">✓ Reintentos + control de fallos</span>
+                <span class="feature">✓ Estado en SQLite</span>
                 <span class="feature">✓ Docker + tests</span>
               </div>
               <div class="demo-links">
@@ -126,12 +125,12 @@
               <div class="voice-demo">
                 <div class="burger-showcase">
                   <span class="burger-icon">🍔</span>
-                  <span class="burger-name">WasoBurger</span>
+                  <span class="burger-name">Wazoski</span>
                 </div>
                 <div class="voice-wave">
                   <span></span><span></span><span></span><span></span><span></span>
                 </div>
-                <div class="voice-text">"Una WasoBurger con bacon"</div>
+                <div class="voice-text">"Una Wazoski con cheddar"</div>
               </div>
             </div>
             <div class="demo-content">
@@ -140,13 +139,12 @@
                 <span class="demo-tag tag-purple">ASR Offline para Cocinas</span>
               </div>
               <p class="demo-desc">
-                Sistema de comandas por voz para entornos QSR (Quick Service Restaurant) 
-                con ruido. Usa Vosk/Kaldi para ASR 100% offline (no requiere internet), 
-                con validación humana antes de enviar a cocina. Catálogo real con 
-                WasoBurger, Biko, Lilo, y más.
+                Sistema de comandas por voz para entornos QSR con ruido. Usa Vosk/Kaldi
+                para ASR 100% offline (no requiere internet), con validación humana antes
+                de enviar a cocina. Catálogo real con Big Ohana, Wazoski, Lilo y más.
               </p>
               <div class="demo-features">
-                <span class="feature">✓ 19 items en catálogo</span>
+                <span class="feature">✓ 19 burgers en catálogo</span>
                 <span class="feature">✓ ASR offline (Vosk/Kaldi)</span>
                 <span class="feature">✓ Voice Activity Detection</span>
                 <span class="feature">✓ Modo demo en navegador</span>
@@ -169,9 +167,9 @@
             <div class="demo-visual vision-bg">
               <div class="terminal-preview">
                 <div class="t-line"><span class="t-green">$</span> python describe_images.py</div>
-                <div class="t-line"><span class="t-blue">[1/45]</span> IMG_001.jpg → 87 palabras</div>
-                <div class="t-line"><span class="t-blue">[2/45]</span> IMG_002.jpg → 94 palabras</div>
-                <div class="t-line"><span class="t-yellow">💾 Checkpoint guardado (5/45)</span></div>
+                <div class="t-line"><span class="t-blue">[1/2]</span> sample_001.png → 87 palabras</div>
+                <div class="t-line"><span class="t-blue">[2/2]</span> sample_002.png → 82 palabras</div>
+                <div class="t-line"><span class="t-yellow">💾 Checkpoint guardado (2/2)</span></div>
                 <div class="t-progress-bar">
                   <div class="t-progress-fill"></div>
                 </div>
@@ -183,16 +181,15 @@
                 <span class="demo-tag tag-green">Enriquecimiento de Catálogos</span>
               </div>
               <p class="demo-desc">
-                Pipeline CLI para generar descripciones de productos usando OpenAI Vision API. 
-                Procesamiento reanudable (checkpoint cada 5 filas), optimizado para coste 
-                (~$0.03 por 400 imágenes), con output en CSV enriquecido. Desarrollado originalmente 
-                para catálogo de moda/joyería.
+                Pipeline CLI para generar descripciones de productos usando OpenAI Vision API.
+                Procesamiento reanudable (checkpoint cada 5 filas) con output en CSV enriquecido.
+                Incluye dataset demo de 2 imágenes y está pensado para escalar a catálogos mayores.
               </p>
               <div class="demo-features">
                 <span class="feature">✓ Procesamiento reanudable</span>
                 <span class="feature">✓ Checkpoint cada 5 filas</span>
-                <span class="feature">✓ Coste optimizado (~$0.03/400)</span>
-                <span class="feature">✓ 80-100 palabras/imagen</span>
+                <span class="feature">✓ Dataset demo (2 imágenes)</span>
+                <span class="feature">✓ Longitud objetivo configurable</span>
                 <span class="feature">✓ CSV input/output</span>
                 <span class="feature">✓ Idempotente</span>
               </div>
@@ -223,7 +220,7 @@
             <ul>
               <li>Patrón Pipeline (datos fluyendo por etapas)</li>
               <li>Separación de concerns (OCR → Reglas → Export)</li>
-              <li>Multi-tenancy (configuración por cliente)</li>
+              <li>Configuración por entorno (TOML/.env)</li>
               <li>Gestión de configuración (TOML, .env)</li>
             </ul>
           </div>
@@ -242,7 +239,7 @@
             <h4>Calidad de Código</h4>
             <ul>
               <li>Type hints (Python 3.11+)</li>
-              <li>Tests con pytest (70%+ coverage)</li>
+              <li>Tests con pytest</li>
               <li>Documentación y docstrings</li>
               <li>Manejo de errores completo</li>
             </ul>
@@ -254,7 +251,7 @@
               <li>Fallos de OCR (facturas sucias)</li>
               <li>Validación de importes (Decimales)</li>
               <li>Rate limiting de APIs</li>
-              <li>Audit trails (quién hizo qué y cuándo)</li>
+              <li>Trazabilidad por etapas (logs/SQLite)</li>
             </ul>
           </div>
         </div>

@@ -272,10 +272,13 @@
     <div class="container">
         <h1>🖼️ Vision Pipeline</h1>
         <p class="subtitle">Enriquecimiento de catálogos con OpenAI Vision API</p>
+        <p style="margin: 6px 0 18px; color: #8b949e; font-size: 0.85rem;">
+            Demo con 2 imágenes del dataset incluido en el repo.
+        </p>
         
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-value" id="statTotal">45</div>
+                <div class="stat-value" id="statTotal">2</div>
                 <div class="stat-label">Imágenes Totales</div>
             </div>
             <div class="stat-card">
@@ -283,12 +286,12 @@
                 <div class="stat-label">Procesadas</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" id="statRemaining">45</div>
+                <div class="stat-value" id="statRemaining">2</div>
                 <div class="stat-label">Pendientes</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" id="statCost">$0.00</div>
-                <div class="stat-label">Coste Estimado</div>
+                <div class="stat-value" id="statCost">—</div>
+                <div class="stat-label">Coste (ver CLI)</div>
             </div>
         </div>
         
@@ -297,7 +300,7 @@
                 <div class="terminal-btn red"></div>
                 <div class="terminal-btn yellow"></div>
                 <div class="terminal-btn green"></div>
-                <span class="terminal-title">albert@portfolio: ~/vision_descr_pipeline</span>
+                <span class="terminal-title">albert@portfolio: ~/vision-descr-pipeline</span>
             </div>
             <div class="terminal-body" id="terminalBody">
                 <div style="margin-bottom: 8px;">
@@ -332,24 +335,24 @@
         </div>
         
         <div class="cost-panel" id="costPanel">
-            <div class="cost-title">💰 Estimación de Coste (OpenAI GPT-4o-mini)</div>
+            <div class="cost-title">💰 Estimación de Coste (se calcula en el CLI real)</div>
             <div class="cost-grid">
                 <div class="cost-item">
-                    <div class="cost-value" id="inputTokens">~32K</div>
+                    <div class="cost-value" id="inputTokens">—</div>
                     <div class="cost-label">Tokens Entrada</div>
                 </div>
                 <div class="cost-item">
-                    <div class="cost-value" id="outputTokens">~3.4K</div>
+                    <div class="cost-value" id="outputTokens">—</div>
                     <div class="cost-label">Tokens Salida</div>
                 </div>
                 <div class="cost-item">
-                    <div class="cost-value" id="costPerImage">$0.0007</div>
+                    <div class="cost-value" id="costPerImage">—</div>
                     <div class="cost-label">Por Imagen</div>
                 </div>
             </div>
             <div class="cost-total">
-                <div class="cost-total-value" id="totalCost">$0.031</div>
-                <div class="cost-label">Total para 45 imágenes</div>
+                <div class="cost-total-value" id="totalCost">—</div>
+                <div class="cost-label">Coste estimado en CLI (resume-stats)</div>
             </div>
         </div>
         
@@ -359,17 +362,24 @@
     </div>
     
     <script>
-        const totalImages = 45;
+        const totalImages = 2;
         let processedCount = 0;
         let isProcessing = false;
         let isPaused = false;
         
         const sampleData = [
-            { id: 'anillo_oro_001', desc: 'Anillo de oro amarillo 18k con diseño clásico. Acabado pulido brillante, banda de 4mm. Perfecto para uso diario o eventos especiales.', words: 87, tokens: 65 },
-            { id: 'collar_plata_002', desc: 'Collar de plata esterlina 925 con diseño moderno y líneas geométricas. Acabado mate que resalta la textura del metal.', words: 94, tokens: 71 },
-            { id: 'pulsera_cuero_003', desc: 'Pulsera de cuero genuino marrón con cierre magnético en acero inoxidable. Estilo casual y versátil para uso diario.', words: 82, tokens: 62 },
-            { id: 'pendientes_perla_004', desc: 'Pendientes de perlas cultivadas con montura en oro blanco de 9k. Diseño clásico y elegante para ocasiones especiales.', words: 91, tokens: 68 },
-            { id: 'reloj_clasico_005', desc: 'Reloj clásico de cuarzo con esfera blanca y correa de piel negra. Resistente al agua hasta 30 metros.', words: 79, tokens: 59 }
+            {
+                id: 'sample_001',
+                desc: 'Foto de producto sobre fondo claro, composición centrada y buena iluminación. La imagen destaca el acabado y los detalles del producto, con un estilo limpio pensado para catálogo. Se perciben texturas suaves y un encuadre frontal que facilita la comparación entre variantes.',
+                words: 42,
+                tokens: 55
+            },
+            {
+                id: 'sample_002',
+                desc: 'Imagen de producto con encuadre horizontal y foco nítido. Fondo neutro y luz uniforme para resaltar color y materiales. Estilo e-commerce: sin elementos distractores, pensado para ficha y comparativa de atributos visuales.',
+                words: 32,
+                tokens: 42
+            }
         ];
         
         function addLog(html, delay = 0) {
@@ -397,7 +407,7 @@
             
             await addLog(`<span class="info">Cargando config.toml...</span>`, 300);
             await addLog(`<span class="info">Encontradas ${totalImages} imágenes para procesar</span>`, 400);
-            await addLog(`<span style="color: #8b949e;">Objetivo: 80-100 palabras por descripción</span>`, 200);
+            await addLog(`<span style="color: #8b949e;">Objetivo configurable: 80-100 palabras (config.toml)</span>`, 200);
             await addLog(`<span style="color: #8b949e;">Checkpoint: Cada 5 filas</span>`, 200);
             await addLog(``, 100);
             
@@ -414,7 +424,7 @@
                 const isCheckpoint = (i + 1) % 5 === 0;
                 const data = sampleData[i % sampleData.length];
                 
-                await addLog(`<span class="success">✓</span> <span class="highlight">IMG_${String(i+1).padStart(3, '0')}.jpg</span> → ${data.words} palabras (${data.tokens} tokens)`, 0);
+                await addLog(`<span class="success">✓</span> <span class="highlight">${data.id}.png</span> → ${data.words} palabras (${data.tokens} tokens)`, 0);
                 
                 if (isCheckpoint) {
                     await addLog(`<span class="info">  💾 Checkpoint guardado (${i+1}/${totalImages})</span>`, 100);
@@ -433,8 +443,6 @@
                 await addLog(`<span class="success">✓ ¡Procesamiento completado!</span>`, 100);
                 await addLog(`<span class="info">  Total: ${totalImages} imágenes procesadas</span>`, 100);
                 await addLog(`<span class="info">  Output: data/creatives_master.csv</span>`, 100);
-                await addLog(`<span class="info">  Coste estimado: $0.031</span>`, 100);
-                
                 document.getElementById('csvPanel').style.display = 'block';
                 document.getElementById('costPanel').style.display = 'block';
                 document.getElementById('resumeBtn').disabled = true;
@@ -478,9 +486,7 @@
             document.getElementById('statProcessed').textContent = processedCount;
             document.getElementById('statRemaining').textContent = totalImages - processedCount;
             
-            const costPerImage = 0.0007;
-            const currentCost = (processedCount * costPerImage).toFixed(3);
-            document.getElementById('statCost').textContent = '$' + currentCost;
+            document.getElementById('statCost').textContent = '—';
         }
         
         function resetDemo() {

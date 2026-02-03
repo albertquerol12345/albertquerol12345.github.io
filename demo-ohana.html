@@ -362,6 +362,9 @@
     <div class="container">
         <h1>🎤 Ohana Voice</h1>
         <p class="subtitle">Comandas por voz para cocinas QSR - Modo Offline</p>
+        <p style="margin: 6px 0 18px; color: #94a3b8; font-size: 0.85rem;">
+            ⚠️ Demo UI en navegador. El reconocimiento de voz requiere backend local.
+        </p>
         
         <div style="text-align: center;">
             <span class="environment-badge">
@@ -382,8 +385,8 @@
                     <div class="commands">
                         <button class="command-btn" onclick="simulateVoice('una Big Ohana')">"una Big Ohana"</button>
                         <button class="command-btn" onclick="simulateVoice('una Boo con cheddar')">"una Boo con cheddar"</button>
-                        <button class="command-btn" onclick="simulateVoice('una Cobra')">"una Cobra"</button>
-                        <button class="command-btn" onclick="simulateVoice('una Dormilona')">"una Dormilona"</button>
+                        <button class="command-btn" onclick="simulateVoice('una Wazoski')">"una Wazoski"</button>
+                        <button class="command-btn" onclick="simulateVoice('una Vegana')">"una Vegana"</button>
                         <button class="command-btn" onclick="simulateVoice('enviar pedido')">"enviar pedido"</button>
                     </div>
                     
@@ -447,27 +450,27 @@
     </div>
     
     <script>
-        // HAMBURGUESAS REALES del proyecto de Albert
+        // Menú real (frontend/data/burgers.json)
         const menuItems = [
             { key: "Big Ohana", display: "La Big Ohana", price: 12.40, icon: "🍔", ingredients: ["Cheddar", "cebolla", "lechuga", "pepinillo", "salsa big ohana"] },
             { key: "Boo", display: "La Boo", price: 12.40, icon: "🍔", ingredients: ["Cheddar", "salsa boloñesa"] },
-            { key: "Cobra", display: "La Cobra", price: 11.90, icon: "🐍", ingredients: ["Ternera", "queso de cabra", "gorgonzola", "cheddar", "salsa 4 quesos"] },
-            { key: "Dormilona", display: "La Dormilona", price: 11.40, icon: "😴", ingredients: ["Ternera", "queso de cabra", "cebolla caramelizada", "rúcula"] },
-            { key: "Gamba", display: "La Gamba", price: 11.90, icon: "🦐", ingredients: ["Gambas", "salsa gambas"] },
-            { key: "Grumete", display: "El Grumete", price: 11.40, icon: "⚓", ingredients: ["Pollo", "salsa marinera"] },
-            { key: "Kelly", display: "La Kelly", price: 12.90, icon: "🍔", ingredients: ["Doble carne", "doble cheddar", "bacon", "salsa kelly"] },
-            { key: "Lilo", display: "La Lilo", price: 12.40, icon: "🌺", ingredients: ["Carne", "piña", "salsa dulce"] },
-            { key: "Little Ohana", display: "Little Ohana", price: 8.90, icon: "🍔", ingredients: ["Carne pequeña", "cheddar"] },
-            { key: "Norma", display: "La Norma", price: 10.90, icon: "🍔", ingredients: ["Carne", "tomate", "lechuga"] },
-            { key: "Ohana", display: "La Ohana", price: 10.90, icon: "🍔", ingredients: ["Carne", "salsa ohana"] },
-            { key: "Parmigiana", display: "La Parmigiana", price: 12.90, icon: "🍔", ingredients: ["Pollo", "parmesano", "salsa tomate"] },
-            { key: "Pina", display: "La Pina", price: 10.90, icon: "🍍", ingredients: ["Carne", "piña", "salsa"] },
-            { key: "Pollo Crujiente", display: "Pollo Crujiente", price: 10.90, icon: "🍗", ingredients: ["Pollo crujiente", "salsa"] },
-            { key: "Stitch", display: "El Stitch", price: 11.90, icon: "👽", ingredients: ["Carne", "salsa stitch"] },
-            { key: "Surf", display: "El Surf", price: 12.40, icon: "🏄", ingredients: ["Pescado", "salsa surf"] },
-            { key: "WasoBurger", display: "La WasoBurger", price: 12.40, icon: "🍔", ingredients: ["Carne", "salsa especial waso"] },
-            { key: "Wichy", display: "El Wichy", price: 12.40, icon: "🥪", ingredients: ["Pollo", "salsa wichy"] },
-            { key: "Biko", display: "La Biko", price: 11.90, icon: "🍔", ingredients: ["Carne", "salsa biko"] }
+            { key: "Cobra", display: "La Cobra", price: 11.90, icon: "🍔", ingredients: ["Ternera", "queso de cabra", "gorgonzola", "cheddar", "salsa 4 quesos"] },
+            { key: "Dormilona", display: "La Dormilona", price: 11.40, icon: "🍔", ingredients: ["Ternera", "queso de cabra", "cebolla caramelizada", "rúcula"] },
+            { key: "Feliz", display: "La Feliz", price: 11.30, icon: "🍔", ingredients: ["Ternera", "cheddar", "lechuga", "tomate", "cebolla", "pepinillo"] },
+            { key: "Fiona", display: "La Fiona", price: 11.90, icon: "🍔", ingredients: ["Ternera", "queso semi curado", "sobrasada", "miel"] },
+            { key: "Grunona", display: "La Gruñona", price: 11.30, icon: "🍔", ingredients: ["Ternera", "cheddar", "bacon", "jalapeño", "salsa picante"] },
+            { key: "Lilo", display: "La Lilo", price: 12.50, icon: "🍔", ingredients: ["Ternera", "cheddar", "pulled pork", "bacon", "salsa barbacoa"] },
+            { key: "Monumental", display: "La Monumental", price: 16.90, icon: "🍔", ingredients: ["Pan brioche domme", "hamburguesa de vaca rubia gallega madurada 30 días", "queso raclette fundido", "rabo de toro al vino tinto", "arena de guanciale crujiente", "rúcula fresca", "salsa Big Ohana con pepinillo y cebolla"] },
+            { key: "Mudita", display: "La Mudita", price: 9.90, icon: "🍔", ingredients: ["Ternera", "cheddar", "bacon", "huevo"] },
+            { key: "Mulan", display: "La Mulan", price: 11.90, icon: "🍔", ingredients: ["Pollo panko", "salsa teriyaki", "col", "zanahoria", "mayonesa"] },
+            { key: "Ohana", display: "La Ohana", price: 13.90, icon: "🍔", ingredients: ["Ternera", "foie", "mermelada de frutos rojos", "queso de cabra", "cebolla caramelizada", "rúcula"] },
+            { key: "Sabia", display: "La Sabia", price: 12.40, icon: "🍔", ingredients: ["Ternera", "queso de cabra", "cebolla caramelizada", "jamón ibérico", "salsa de bacon ahumado"] },
+            { key: "Stich", display: "La Stich", price: 11.90, icon: "🍔", ingredients: ["Ternera", "cheddar", "huevo frito", "guacamole"] },
+            { key: "Sully", display: "La Sully", price: 11.90, icon: "🍔", ingredients: ["Cheddar", "bacon"] },
+            { key: "Tartufo", display: "La Tartufo", price: 12.40, icon: "🍔", ingredients: ["Ternera", "queso semi curado", "champiñones", "mayonesa trufada"] },
+            { key: "Timida", display: "La Tímida", price: 10.90, icon: "🍔", ingredients: ["Pollo rebozado", "tomate", "lechuga", "mayonesa"] },
+            { key: "Vegana", display: "La Vegana", price: 10.40, icon: "🥬", ingredients: ["Hamburguesa vegana", "lechuga", "tomate", "cebolla", "pepinillo"] },
+            { key: "Wazoski", display: "La Wazoski", price: 11.90, icon: "🍔", ingredients: ["Cheddar", "cebolla", "pepinillo"] }
         ];
         
         let order = [];
@@ -504,32 +507,28 @@
         
         async function processCommand(text) {
             const lower = text.toLowerCase();
-            
-            if (lower.includes('big ohana')) {
-                addToOrder(0);
-            } else if (lower.includes('boo')) {
-                if (lower.includes('cheddar')) {
-                    currentExtras.push('+Cheddar extra');
-                }
-                addToOrder(1);
-            } else if (lower.includes('cobra')) {
-                addToOrder(2);
-            } else if (lower.includes('dormilona')) {
-                addToOrder(3);
-            } else if (lower.includes('gamba')) {
-                addToOrder(4);
-            } else if (lower.includes('grumete')) {
-                addToOrder(5);
-            } else if (lower.includes('kelly')) {
-                addToOrder(6);
-            } else if (lower.includes('lilo')) {
-                addToOrder(7);
-            } else if (lower.includes('waso')) {
-                addToOrder(16);
-            } else if (lower.includes('biko')) {
-                addToOrder(18);
-            } else if (lower.includes('enviar')) {
+
+            if (lower.includes('enviar')) {
                 sendToKitchen();
+                return;
+            }
+
+            if (lower.includes('bacon')) {
+                currentExtras.push('+Bacon');
+            }
+            if (lower.includes('sin cebolla')) {
+                currentExtras.push('-Cebolla');
+            }
+            if (lower.includes('cheddar')) {
+                currentExtras.push('+Cheddar');
+            }
+
+            const match = menuItems.find(item =>
+                lower.includes(item.key.toLowerCase()) ||
+                lower.includes(item.display.toLowerCase())
+            );
+            if (match) {
+                addToOrder(menuItems.indexOf(match));
             }
         }
         
