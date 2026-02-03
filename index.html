@@ -1,344 +1,355 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Albert Querol - Demostraciones Técnicas</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <div class="bg-animation"></div>
-    
-    <main class="container">
-      <!-- Hero -->
-      <header class="hero">
-        <div class="hero-badge">
-          <span class="pulse"></span>
-          Python Automation & Data Pipelines
-        </div>
-        <h1>
-          <span class="gradient-text">Albert Querol Beltrán</span>
-        </h1>
-        <p class="hero-subtitle">
-          Demostraciones técnicas de arquitecturas Python para automatización.
-          <br>Experiencia en operaciones QSR + Certificación SAP FI.
-        </p>
-        
-        <div class="hero-cta">
-          <a href="https://github.com/albertquerol12345" class="btn btn-primary" target="_blank">
-            <span>Ver Proyectos en GitHub</span>
-          </a>
-          <a href="mailto:albertquerol12345@gmail.com" class="btn btn-secondary">
-            <span>Contactar</span>
-          </a>
-        </div>
-        
-        <div class="hero-stats">
-          <div class="stat">
-            <span class="stat-number">3</span>
-            <span class="stat-label">Proyectos</span>
-          </div>
-          <div class="stat">
-            <span class="stat-number">34</span>
-            <span class="stat-label">Facturas Demo</span>
-          </div>
-          <div class="stat">
-            <span class="stat-number">19</span>
-            <span class="stat-label">Items Menú</span>
-          </div>
-          <div class="stat">
-            <span class="stat-number">2</span>
-            <span class="stat-label">Imágenes Demo</span>
-          </div>
-        </div>
-      </header>
 
-      <!-- Banner de Contexto -->
-      <section class="clarification-banner">
-        <div class="banner-content">
-          <span class="banner-icon">💡</span>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Albert Querol - Demostraciones Técnicas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="bg-animation"></div>
+
+  <main class="container">
+    <!-- Hero -->
+    <header class="hero">
+      <div class="hero-badge">
+        <span class="pulse"></span>
+        Python Automation & Data Pipelines
+      </div>
+      <h1>
+        <span class="gradient-text">Albert Querol Beltrán</span>
+      </h1>
+      <p class="hero-subtitle">
+        Demostraciones técnicas de arquitecturas Python para automatización.
+        <br>Experiencia en operaciones QSR + Certificación SAP FI.
+      </p>
+
+      <div class="hero-cta">
+        <a href="https://github.com/albertquerol12345" class="btn btn-primary" target="_blank">
+          <span>Ver Proyectos en GitHub</span>
+        </a>
+        <a href="mailto:albertquerol12345@gmail.com" class="btn btn-secondary">
+          <span>Contactar</span>
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-number">3</span>
+          <span class="stat-label">Proyectos</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">34</span>
+          <span class="stat-label">Facturas Demo</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">19</span>
+          <span class="stat-label">Items Menú</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">2</span>
+          <span class="stat-label">Imágenes Demo</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Banner de Contexto -->
+    <section class="clarification-banner">
+      <div class="banner-content">
+        <span class="banner-icon">💡</span>
+        <p>
+          <strong>Lo que verás:</strong> Proyectos demo-scale que demuestran patrones de arquitectura
+          (circuit breakers, HITL, checkpointing) con código real y funcional. No son productos comerciales,
+          son <strong>demostraciones técnicas</strong> de cómo abordo problemas de automatización.
+        </p>
+      </div>
+    </section>
+
+    <!-- Proyectos -->
+    <section class="demos-section">
+      <h2 class="section-title">
+        <span class="title-accent">▶</span> Proyectos Destacados
+      </h2>
+
+      <div class="demos-grid">
+        <!-- CERTIVA -->
+        <article class="demo-card certiva">
+          <div class="demo-content">
+            <div class="demo-header">
+              <h3>🧾 Certiva</h3>
+              <span class="demo-tag tag-blue">Pipeline OCR + Contabilidad</span>
+            </div>
+            <p class="demo-desc">
+              Pipeline local para procesamiento de facturas: OCR (Azure o dummy), reglas deterministas,
+              cola HITL (Human-in-the-Loop) para validación humana y exportación a CSV compatible con a3innuva.
+              Guarda estado y trazabilidad en SQLite.
+            </p>
+            <div class="demo-features">
+              <span class="feature">✓ 34 facturas de demo (tests/golden/)</span>
+              <span class="feature">✓ OCR Azure (opcional) + dummy</span>
+              <span class="feature">✓ Web UI para revisión HITL</span>
+              <span class="feature">✓ Reintentos + control de fallos</span>
+              <span class="feature">✓ Estado en SQLite</span>
+              <span class="feature">✓ Docker + tests</span>
+            </div>
+            <div class="demo-links">
+              <a href="https://github.com/albertquerol12345/certiva" class="link-primary" target="_blank">
+                Ver Código →
+              </a>
+              <a href="demo-certiva.html" class="link-secondary">
+                Ver Demo Interactiva →
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- OHANA VOICE -->
+        <article class="demo-card ohana">
+          <div class="demo-content">
+            <div class="demo-header">
+              <h3>🎤 Ohana Voice</h3>
+              <span class="demo-tag tag-purple">ASR Offline para Cocinas</span>
+            </div>
+            <p class="demo-desc">
+              Sistema de comandas por voz para entornos QSR con ruido. Usa Vosk/Kaldi
+              para ASR 100% offline (no requiere internet), con validación humana antes
+              de enviar a cocina. Catálogo real de 19 burgers.
+            </p>
+            <div class="demo-features">
+              <span class="feature">✓ 19 burgers en catálogo</span>
+              <span class="feature">✓ ASR offline (Vosk/Kaldi)</span>
+              <span class="feature">✓ Voice Activity Detection</span>
+              <span class="feature">✓ Modo demo en navegador</span>
+              <span class="feature">✓ WebSocket tiempo real</span>
+              <span class="feature">✓ Validación HITL</span>
+            </div>
+            <div class="demo-links">
+              <a href="https://github.com/albertquerol12345/ohana-voice" class="link-primary" target="_blank">
+                Ver Código →
+              </a>
+              <a href="demo-ohana.html" class="link-secondary">
+                Ver Demo Interactiva →
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- VISION PIPELINE -->
+        <article class="demo-card vision">
+          <div class="demo-content">
+            <div class="demo-header">
+              <h3>🖼️ Vision Pipeline</h3>
+              <span class="demo-tag tag-green">Enriquecimiento de Catálogos</span>
+            </div>
+            <p class="demo-desc">
+              Pipeline CLI para generar descripciones de productos usando OpenAI Vision API.
+              Procesamiento reanudable (checkpoint cada 5 filas) con output en CSV enriquecido.
+              Incluye dataset demo de 2 imágenes y está pensado para escalar a catálogos mayores.
+            </p>
+            <div class="demo-features">
+              <span class="feature">✓ Procesamiento reanudable</span>
+              <span class="feature">✓ Checkpoint cada 5 filas</span>
+              <span class="feature">✓ Dataset demo (2 imágenes)</span>
+              <span class="feature">✓ Longitud objetivo configurable</span>
+              <span class="feature">✓ CSV input/output</span>
+              <span class="feature">✓ Idempotente</span>
+            </div>
+            <div class="demo-links">
+              <a href="https://github.com/albertquerol12345/vision-descr-pipeline" class="link-primary" target="_blank">
+                Ver Código →
+              </a>
+              <a href="demo-vision.html" class="link-secondary">
+                Ver Demo Interactiva →
+              </a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Qué Evaluar -->
+    <section class="evaluation-section">
+      <h2 class="section-title">Qué Evaluar</h2>
+      <p class="section-subtitle">
+        Si eres reviewer técnico, estos son los aspectos arquitectónicos que demuestran los proyectos
+      </p>
+
+      <div class="eval-grid">
+        <div class="eval-card">
+          <div class="eval-icon">🏗️</div>
+          <h4>Arquitectura</h4>
+          <ul>
+            <li>Patrón Pipeline (datos fluyendo por etapas)</li>
+            <li>Separación de concerns (OCR → Reglas → Export)</li>
+            <li>Configuración por entorno (TOML/.env)</li>
+            <li>Gestión de configuración (TOML, .env)</li>
+          </ul>
+        </div>
+        <div class="eval-card">
+          <div class="eval-icon">🛡️</div>
+          <h4>Resiliencia</h4>
+          <ul>
+            <li>Circuit breakers (degradación graceful)</li>
+            <li>Retry logic con exponential backoff</li>
+            <li>Checkpointing (reanudar sin perder datos)</li>
+            <li>Manejo de fallos de APIs externas</li>
+          </ul>
+        </div>
+        <div class="eval-card">
+          <div class="eval-icon">🧪</div>
+          <h4>Calidad de Código</h4>
+          <ul>
+            <li>Type hints (Python 3.10+)</li>
+            <li>Tests con pytest</li>
+            <li>Documentación y docstrings</li>
+            <li>Manejo de errores completo</li>
+          </ul>
+        </div>
+        <div class="eval-card">
+          <div class="eval-icon">🔍</div>
+          <h4>Casos Borde</h4>
+          <ul>
+            <li>Fallos de OCR (facturas sucias)</li>
+            <li>Validación de importes (Decimales)</li>
+            <li>Rate limiting de APIs</li>
+            <li>Trazabilidad por etapas (logs/SQLite)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="stack-section">
+      <h2 class="section-title">Conocimientos y Aptitudes</h2>
+      <div class="stack-grid">
+        <div class="stack-category">
+          <h4>Python & Datos</h4>
+          <div class="stack-items">
+            <span class="stack-item">Python</span>
+            <span class="stack-item">pandas</span>
+            <span class="stack-item">Data quality</span>
+            <span class="stack-item">Validaciones</span>
+            <span class="stack-item">Logging</span>
+            <span class="stack-item">CSV/JSON</span>
+            <span class="stack-item">REST APIs</span>
+            <span class="stack-item">Webhooks</span>
+          </div>
+        </div>
+        <div class="stack-category">
+          <h4>Sistemas & Scripts</h4>
+          <div class="stack-items">
+            <span class="stack-item">Linux (Ubuntu)</span>
+            <span class="stack-item">Bash</span>
+            <span class="stack-item">Git</span>
+            <span class="stack-item">Automation scripts</span>
+          </div>
+        </div>
+        <div class="stack-category">
+          <h4>Dominio & Core</h4>
+          <div class="stack-items">
+            <span class="stack-item">OCR (Azure/dummy)</span>
+            <span class="stack-item">HITL</span>
+            <span class="stack-item">SAP FI</span>
+            <span class="stack-item">Contabilidad</span>
+            <span class="stack-item">AP/AR</span>
+            <span class="stack-item">Conciliación</span>
+          </div>
+        </div>
+        <div class="stack-category">
+          <h4>Familiaridad</h4>
+          <div class="stack-items">
+            <span class="stack-item">pytest</span>
+            <span class="stack-item">SQL básico</span>
+            <span class="stack-item">Docker</span>
+            <span class="stack-item">CI</span>
+            <span class="stack-item">systemd (básico)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sobre Mí -->
+    <section class="about-section">
+      <div class="about-grid">
+        <div class="about-content">
+          <h2>Sobre Mí</h2>
           <p>
-            <strong>Lo que verás:</strong> Proyectos demo-scale que demuestran patrones de arquitectura 
-            (circuit breakers, HITL, checkpointing) con código real y funcional. No son productos comerciales, 
-            son <strong>demostraciones técnicas</strong> de cómo abordo problemas de automatización.
+            Soy desarrollador Python junior con <strong>experiencia operativa en QSR (2023–2025)</strong>
+            y <strong>certificación SAP FI</strong>. Entiendo lo que
+            rompe en procesos reales porque lo he vivido.
           </p>
-        </div>
-      </section>
-
-      <!-- Proyectos -->
-      <section class="demos-section">
-        <h2 class="section-title">
-          <span class="title-accent">▶</span> Proyectos Destacados
-        </h2>
-        
-        <div class="demos-grid">
-          <!-- CERTIVA -->
-          <article class="demo-card certiva">
-            <div class="demo-content">
-              <div class="demo-header">
-                <h3>🧾 Certiva</h3>
-                <span class="demo-tag tag-blue">Pipeline OCR + Contabilidad</span>
-              </div>
-              <p class="demo-desc">
-                Pipeline local para procesamiento de facturas: OCR (Azure o dummy), reglas deterministas,
-                cola HITL (Human-in-the-Loop) para validación humana y exportación a CSV compatible con a3innuva.
-                Guarda estado y trazabilidad en SQLite.
-              </p>
-              <div class="demo-features">
-                <span class="feature">✓ 34 facturas de demo (tests/golden/)</span>
-                <span class="feature">✓ OCR Azure (opcional) + dummy</span>
-                <span class="feature">✓ Web UI para revisión HITL</span>
-                <span class="feature">✓ Reintentos + control de fallos</span>
-                <span class="feature">✓ Estado en SQLite</span>
-                <span class="feature">✓ Docker + tests</span>
-              </div>
-              <div class="demo-links">
-                <a href="https://github.com/albertquerol12345/certiva" class="link-primary" target="_blank">
-                  Ver Código →
-                </a>
-                <a href="demo-certiva.html" class="link-secondary">
-                  Ver Demo Interactiva →
-                </a>
-              </div>
+          <p>
+            Mi valor está en la combinación de <strong>contexto operacional + implementación técnica</strong>.
+            No solo escribo código; pienso en qué pasa cuando el OCR falla, cuando la API está caída,
+            cuando el usuario comete un error.
+          </p>
+          <div class="about-highlights">
+            <div class="highlight">
+              <span class="highlight-number">2023–2025</span>
+              <span class="highlight-text">Operaciones QSR</span>
             </div>
-          </article>
-
-          <!-- OHANA VOICE -->
-          <article class="demo-card ohana">
-            <div class="demo-content">
-              <div class="demo-header">
-                <h3>🎤 Ohana Voice</h3>
-                <span class="demo-tag tag-purple">ASR Offline para Cocinas</span>
-              </div>
-              <p class="demo-desc">
-                Sistema de comandas por voz para entornos QSR con ruido. Usa Vosk/Kaldi
-                para ASR 100% offline (no requiere internet), con validación humana antes
-                de enviar a cocina. Catálogo real de 19 burgers.
-              </p>
-              <div class="demo-features">
-                <span class="feature">✓ 19 burgers en catálogo</span>
-                <span class="feature">✓ ASR offline (Vosk/Kaldi)</span>
-                <span class="feature">✓ Voice Activity Detection</span>
-                <span class="feature">✓ Modo demo en navegador</span>
-                <span class="feature">✓ WebSocket tiempo real</span>
-                <span class="feature">✓ Validación HITL</span>
-              </div>
-              <div class="demo-links">
-                <a href="https://github.com/albertquerol12345/ohana-voice" class="link-primary" target="_blank">
-                  Ver Código →
-                </a>
-                <a href="demo-ohana.html" class="link-secondary">
-                  Ver Demo Interactiva →
-                </a>
-              </div>
+            <div class="highlight">
+              <span class="highlight-text">Certificación</span>
+              <span class="highlight-number">SAP FI</span>
             </div>
-          </article>
-
-          <!-- VISION PIPELINE -->
-          <article class="demo-card vision">
-            <div class="demo-content">
-              <div class="demo-header">
-                <h3>🖼️ Vision Pipeline</h3>
-                <span class="demo-tag tag-green">Enriquecimiento de Catálogos</span>
-              </div>
-              <p class="demo-desc">
-                Pipeline CLI para generar descripciones de productos usando OpenAI Vision API.
-                Procesamiento reanudable (checkpoint cada 5 filas) con output en CSV enriquecido.
-                Incluye dataset demo de 2 imágenes y está pensado para escalar a catálogos mayores.
-              </p>
-              <div class="demo-features">
-                <span class="feature">✓ Procesamiento reanudable</span>
-                <span class="feature">✓ Checkpoint cada 5 filas</span>
-                <span class="feature">✓ Dataset demo (2 imágenes)</span>
-                <span class="feature">✓ Longitud objetivo configurable</span>
-                <span class="feature">✓ CSV input/output</span>
-                <span class="feature">✓ Idempotente</span>
-              </div>
-              <div class="demo-links">
-                <a href="https://github.com/albertquerol12345/vision-descr-pipeline" class="link-primary" target="_blank">
-                  Ver Código →
-                </a>
-                <a href="demo-vision.html" class="link-secondary">
-                  Ver Demo Interactiva →
-                </a>
-              </div>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <!-- Qué Evaluar -->
-      <section class="evaluation-section">
-        <h2 class="section-title">Qué Evaluar</h2>
-        <p class="section-subtitle">
-          Si eres reviewer técnico, estos son los aspectos arquitectónicos que demuestran los proyectos
-        </p>
-        
-        <div class="eval-grid">
-          <div class="eval-card">
-            <div class="eval-icon">🏗️</div>
-            <h4>Arquitectura</h4>
-            <ul>
-              <li>Patrón Pipeline (datos fluyendo por etapas)</li>
-              <li>Separación de concerns (OCR → Reglas → Export)</li>
-              <li>Configuración por entorno (TOML/.env)</li>
-              <li>Gestión de configuración (TOML, .env)</li>
-            </ul>
-          </div>
-          <div class="eval-card">
-            <div class="eval-icon">🛡️</div>
-            <h4>Resiliencia</h4>
-            <ul>
-              <li>Circuit breakers (degradación graceful)</li>
-              <li>Retry logic con exponential backoff</li>
-              <li>Checkpointing (reanudar sin perder datos)</li>
-              <li>Manejo de fallos de APIs externas</li>
-            </ul>
-          </div>
-          <div class="eval-card">
-            <div class="eval-icon">🧪</div>
-            <h4>Calidad de Código</h4>
-            <ul>
-              <li>Type hints (Python 3.10+)</li>
-              <li>Tests con pytest</li>
-              <li>Documentación y docstrings</li>
-              <li>Manejo de errores completo</li>
-            </ul>
-          </div>
-          <div class="eval-card">
-            <div class="eval-icon">🔍</div>
-            <h4>Casos Borde</h4>
-            <ul>
-              <li>Fallos de OCR (facturas sucias)</li>
-              <li>Validación de importes (Decimales)</li>
-              <li>Rate limiting de APIs</li>
-              <li>Trazabilidad por etapas (logs/SQLite)</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <!-- Stack Tecnológico -->
-      <section class="stack-section">
-        <h2 class="section-title">Stack Tecnológico</h2>
-        <div class="stack-grid">
-          <div class="stack-category">
-            <h4>Core</h4>
-            <div class="stack-items">
-              <span class="stack-item">Python 3.10+</span>
-              <span class="stack-item">Pandas</span>
-              <span class="stack-item">Pydantic</span>
-              <span class="stack-item">SQLite</span>
-            </div>
-          </div>
-          <div class="stack-category">
-            <h4>Web & APIs</h4>
-            <div class="stack-items">
-              <span class="stack-item">FastAPI</span>
-              <span class="stack-item">WebSocket</span>
-              <span class="stack-item">Jinja2</span>
-              <span class="stack-item">Azure Form Recognizer</span>
-            </div>
-          </div>
-          <div class="stack-category">
-            <h4>Infraestructura</h4>
-            <div class="stack-items">
-              <span class="stack-item">Docker</span>
-              <span class="stack-item">Git</span>
-              <span class="stack-item">pytest</span>
-              <span class="stack-item">Prometheus/Grafana</span>
-            </div>
-          </div>
-          <div class="stack-category">
-            <h4>Dominio</h4>
-            <div class="stack-items">
-              <span class="stack-item">SAP FI</span>
-              <span class="stack-item">a3innuva</span>
-              <span class="stack-item">Contabilidad</span>
-              <span class="stack-item">Operaciones QSR</span>
+            <div class="highlight">
+              <span class="highlight-number">pytest</span>
+              <span class="highlight-text">Tests en Certiva</span>
             </div>
           </div>
         </div>
-      </section>
-
-      <!-- Sobre Mí -->
-      <section class="about-section">
-        <div class="about-grid">
-          <div class="about-content">
-            <h2>Sobre Mí</h2>
-            <p>
-              Soy desarrollador Python junior con <strong>experiencia operativa en QSR (2023–2025)</strong> 
-              y <strong>certificación SAP FI</strong>. Entiendo lo que 
-              rompe en procesos reales porque lo he vivido.
-            </p>
-            <p>
-              Mi valor está en la combinación de <strong>contexto operacional + implementación técnica</strong>. 
-              No solo escribo código; pienso en qué pasa cuando el OCR falla, cuando la API está caída, 
-              cuando el usuario comete un error.
-            </p>
-            <div class="about-highlights">
-              <div class="highlight">
-                <span class="highlight-number">2023–2025</span>
-                <span class="highlight-text">Operaciones QSR</span>
-              </div>
-              <div class="highlight">
-                <span class="highlight-text">Certificación</span>
-                <span class="highlight-number">SAP FI</span>
-              </div>
-              <div class="highlight">
-                <span class="highlight-number">pytest</span>
-                <span class="highlight-text">Tests en Certiva</span>
-              </div>
-            </div>
+        <div class="about-location">
+          <div class="location-card">
+            <span class="location-icon">📍</span>
+            <span class="location-text">Barcelona, España</span>
           </div>
-          <div class="about-location">
-            <div class="location-card">
-              <span class="location-icon">📍</span>
-              <span class="location-text">Barcelona, España</span>
-            </div>
-            <div class="location-card">
-              <span class="location-icon">💼</span>
-              <span class="location-text">Abierto a roles de Automation / Backend</span>
-            </div>
-            <div class="location-card">
-              <span class="location-icon">🌐</span>
-              <span class="location-text">Español / Catalán / Inglés</span>
-            </div>
+          <div class="location-card">
+            <span class="location-icon">💼</span>
+            <span class="location-text">Abierto a roles de Automation / Backend</span>
+          </div>
+          <div class="location-card">
+            <span class="location-icon">🌐</span>
+            <span class="location-text">Español / Catalán / Inglés</span>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- Contacto -->
-      <section class="cta-section">
-        <h2>¿Interesado en mi perfil?</h2>
-        <p>Todo el código está en GitHub. Puedes ejecutarlo localmente, modificarlo, romperlo.</p>
-        <div class="cta-buttons">
-          <a href="https://github.com/albertquerol12345" class="btn btn-primary btn-large" target="_blank">
-            <span>⭐ Ver GitHub</span>
-          </a>
-          <a href="mailto:albertquerol12345@gmail.com" class="btn btn-secondary btn-large">
-            <span>📧 Contactar</span>
-          </a>
-          <a href="https://linkedin.com/in/albert-querol" class="btn btn-secondary btn-large" target="_blank">
-            <span>💼 LinkedIn</span>
-          </a>
-        </div>
-      </section>
+    <!-- Contacto -->
+    <section class="cta-section">
+      <h2>¿Interesado en mi perfil?</h2>
+      <p>Todo el código está en GitHub. Puedes ejecutarlo localmente, modificarlo, romperlo.</p>
+      <div class="cta-buttons">
+        <a href="https://github.com/albertquerol12345" class="btn btn-primary btn-large" target="_blank">
+          <span>⭐ Ver GitHub</span>
+        </a>
+        <a href="mailto:albertquerol12345@gmail.com" class="btn btn-secondary btn-large">
+          <span>📧 Contactar</span>
+        </a>
+        <a href="https://linkedin.com/in/albert-querol" class="btn btn-secondary btn-large" target="_blank">
+          <span>💼 LinkedIn</span>
+        </a>
+      </div>
+    </section>
 
-      <!-- Footer -->
-      <footer class="footer">
-        <div class="footer-links">
-          <a href="https://github.com/albertquerol12345" target="_blank">GitHub</a>
-          <a href="https://linkedin.com/in/albert-querol" target="_blank">LinkedIn</a>
-          <a href="mailto:albertquerol12345@gmail.com">Email</a>
-        </div>
-        <p class="footer-note">
-          Proyectos demo-scale con código real y funcional • Barcelona, España
-        </p>
-      </footer>
-    </main>
-  </body>
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-links">
+        <a href="https://github.com/albertquerol12345" target="_blank">GitHub</a>
+        <a href="https://linkedin.com/in/albert-querol" target="_blank">LinkedIn</a>
+        <a href="mailto:albertquerol12345@gmail.com">Email</a>
+      </div>
+      <p class="footer-note">
+        Proyectos demo-scale con código real y funcional • Barcelona, España
+      </p>
+    </footer>
+  </main>
+</body>
+
 </html>
