@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vision Pipeline Demo - Batch Image Processing</title>
+    <title>Vision Pipeline Demo - Procesamiento de Imágenes</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -19,7 +19,7 @@
         }
         h1 {
             text-align: center;
-            font-size: 2.2rem;
+            font-size: 2rem;
             margin-bottom: 8px;
             color: #7ee787;
         }
@@ -30,7 +30,34 @@
             font-family: system-ui, sans-serif;
         }
         
-        /* Terminal Window */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+        }
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        .stat-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #7ee787;
+        }
+        .stat-label {
+            font-size: 0.75rem;
+            color: #8b949e;
+            margin-top: 4px;
+            font-family: system-ui, sans-serif;
+        }
+        
         .terminal {
             background: #161b22;
             border: 1px solid #30363d;
@@ -56,50 +83,33 @@
         .terminal-btn.green { background: #27c93f; }
         .terminal-title {
             margin-left: 10px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #8b949e;
         }
         .terminal-body {
             padding: 20px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             line-height: 1.6;
-            min-height: 400px;
+            min-height: 350px;
         }
         
-        /* Terminal Output */
-        .cmd-line {
-            margin-bottom: 4px;
-        }
-        .cmd-prompt {
-            color: #7ee787;
-        }
-        .cmd-text {
-            color: #c9d1d9;
-        }
-        .output {
-            margin: 8px 0 16px 0;
+        .log-line {
+            margin-bottom: 6px;
             opacity: 0;
             animation: fadeIn 0.3s forwards;
         }
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-        .output-line {
-            margin: 2px 0;
-        }
-        .success { color: #7ee787; }
+        @keyframes fadeIn { to { opacity: 1; } }
+        .time { color: #64748b; margin-right: 8px; }
         .info { color: #79c0ff; }
+        .success { color: #7ee787; }
         .warning { color: #ffa657; }
-        .error { color: #f85149; }
-        .muted { color: #8b949e; }
         .highlight { color: #d2a8ff; }
         
-        /* Progress Bar */
         .progress-container {
             margin: 10px 0;
             background: #21262d;
             border-radius: 4px;
-            height: 20px;
+            height: 18px;
             overflow: hidden;
         }
         .progress-bar {
@@ -111,58 +121,67 @@
             align-items: center;
             justify-content: flex-end;
             padding-right: 8px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: white;
             font-weight: bold;
         }
         
-        /* Stats Panel */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+        .controls {
+            display: flex;
             gap: 15px;
+            justify-content: center;
             margin: 30px 0;
         }
-        @media (max-width: 768px) {
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        .btn {
+            background: #238636;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
         }
-        .stat-card {
-            background: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 8px;
-            padding: 16px;
-            text-align: center;
+        .btn:hover:not(:disabled) {
+            background: #2ea043;
+            transform: translateY(-2px);
         }
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #7ee787;
+        .btn:disabled {
+            background: #30363d;
+            cursor: not-allowed;
         }
-        .stat-label {
-            font-size: 0.8rem;
-            color: #8b949e;
-            margin-top: 4px;
-            font-family: system-ui, sans-serif;
+        .btn.secondary {
+            background: #1f6feb;
+        }
+        .btn.secondary:hover {
+            background: #388bfd;
         }
         
-        /* CSV Preview */
         .csv-panel {
             background: #161b22;
             border: 1px solid #30363d;
             border-radius: 8px;
             padding: 20px;
             margin-top: 20px;
+            display: none;
         }
+        .csv-panel.show {
+            display: block;
+            animation: slideUp 0.5s;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
         .csv-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
         }
-        .csv-title {
-            color: #79c0ff;
-            font-weight: bold;
-        }
+        .csv-title { color: #79c0ff; font-weight: bold; }
         .csv-badge {
             background: rgba(34, 197, 94, 0.2);
             color: #7ee787;
@@ -173,7 +192,7 @@
         .csv-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
         .csv-table th {
             background: #21262d;
@@ -186,120 +205,45 @@
             padding: 10px;
             border-bottom: 1px solid #30363d;
         }
-        .csv-table tr:hover {
-            background: rgba(56, 189, 248, 0.05);
-        }
         .desc-cell {
-            max-width: 300px;
+            max-width: 350px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
         
-        /* Controls */
-        .controls {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin: 30px 0;
-        }
-        .btn {
-            background: #238636;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 6px;
-            font-family: inherit;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .btn:hover {
-            background: #2ea043;
-            transform: translateY(-1px);
-        }
-        .btn:disabled {
-            background: #30363d;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .btn.secondary {
-            background: #1f6feb;
-        }
-        .btn.secondary:hover {
-            background: #388bfd;
-        }
-        
-        /* Image Gallery */
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            margin: 20px 0;
-        }
-        @media (max-width: 768px) {
-            .gallery { grid-template-columns: repeat(3, 1fr); }
-        }
-        .gallery-item {
-            aspect-ratio: 1;
-            background: #21262d;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            border: 2px solid transparent;
-            transition: all 0.3s;
-        }
-        .gallery-item.processing {
-            border-color: #f0883e;
-            animation: pulse 1s infinite;
-        }
-        .gallery-item.completed {
-            border-color: #238636;
-            background: rgba(35, 134, 54, 0.2);
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-        
-        /* Cost Calculator */
         .cost-panel {
             background: linear-gradient(135deg, rgba(31, 111, 235, 0.1), rgba(121, 192, 255, 0.1));
             border: 1px solid #1f6feb;
             border-radius: 8px;
             padding: 20px;
             margin-top: 20px;
+            display: none;
         }
+        .cost-panel.show { display: block; }
         .cost-title {
             color: #79c0ff;
             font-weight: bold;
             margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-family: system-ui, sans-serif;
         }
-        .cost-breakdown {
+        .cost-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 15px;
-            font-family: system-ui, sans-serif;
         }
         .cost-item {
             text-align: center;
         }
         .cost-value {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: bold;
             color: #e3b341;
         }
         .cost-label {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #8b949e;
+            font-family: system-ui, sans-serif;
         }
         .cost-total {
             text-align: center;
@@ -308,12 +252,11 @@
             border-top: 1px solid #30363d;
         }
         .cost-total-value {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: bold;
             color: #7ee787;
         }
         
-        /* Back Link */
         .back-link {
             text-align: center;
             margin-top: 30px;
@@ -323,42 +266,32 @@
             text-decoration: none;
             font-family: system-ui, sans-serif;
         }
-        .back-link a:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🖼️ Vision Pipeline Demo</h1>
-        <p class="subtitle">Resumable Batch Processing with OpenAI Vision API</p>
+        <h1>🖼️ Vision Pipeline</h1>
+        <p class="subtitle">Enriquecimiento de catálogos con OpenAI Vision API</p>
         
-        <!-- Stats -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-value" id="statTotal">45</div>
-                <div class="stat-label">Total Images</div>
+                <div class="stat-label">Imágenes Totales</div>
             </div>
             <div class="stat-card">
                 <div class="stat-value" id="statProcessed">0</div>
-                <div class="stat-label">Processed</div>
+                <div class="stat-label">Procesadas</div>
             </div>
             <div class="stat-card">
                 <div class="stat-value" id="statRemaining">45</div>
-                <div class="stat-label">Remaining</div>
+                <div class="stat-label">Pendientes</div>
             </div>
             <div class="stat-card">
                 <div class="stat-value" id="statCost">$0.00</div>
-                <div class="stat-label">Est. Cost</div>
+                <div class="stat-label">Coste Estimado</div>
             </div>
         </div>
         
-        <!-- Image Gallery -->
-        <div class="gallery" id="gallery">
-            <!-- Generated by JS -->
-        </div>
-        
-        <!-- Terminal -->
         <div class="terminal">
             <div class="terminal-header">
                 <div class="terminal-btn red"></div>
@@ -367,72 +300,61 @@
                 <span class="terminal-title">albert@portfolio: ~/vision_descr_pipeline</span>
             </div>
             <div class="terminal-body" id="terminalBody">
-                <div class="cmd-line">
-                    <span class="cmd-prompt">$ </span>
-                    <span class="cmd-text">python -m src.main describe-all</span>
+                <div style="margin-bottom: 8px;">
+                    <span style="color: #7ee787;">$ </span>
+                    <span>python -m src.main describe-all</span>
                 </div>
             </div>
         </div>
         
-        <!-- Controls -->
         <div class="controls">
-            <button class="btn" id="startBtn" onclick="startDemo()">
-                ▶ Start Processing
-            </button>
-            <button class="btn secondary" id="resumeBtn" onclick="simulateResume()" disabled>
-                ⏸ Simulate Interrupt & Resume
-            </button>
-            <button class="btn" onclick="resetDemo()">
-                ↻ Reset
-            </button>
+            <button class="btn" id="startBtn" onclick="startDemo()">Iniciar Procesamiento</button>
+            <button class="btn secondary" id="resumeBtn" onclick="simulateResume()" disabled>Simular Interrupción</button>
+            <button class="btn" onclick="resetDemo()">Reiniciar</button>
         </div>
         
-        <!-- CSV Output -->
-        <div class="csv-panel" id="csvPanel" style="display: none;">
+        <div class="csv-panel" id="csvPanel">
             <div class="csv-header">
                 <span class="csv-title">📄 creatives_master.csv</span>
-                <span class="csv-badge">✓ Updated</span>
+                <span class="csv-badge">✓ Actualizado</span>
             </div>
             <table class="csv-table">
                 <thead>
                     <tr>
                         <th>image_id</th>
                         <th>description_es</th>
-                        <th>words</th>
+                        <th>palabras</th>
                         <th>tokens</th>
                     </tr>
                 </thead>
-                <tbody id="csvBody">
-                    <!-- Populated by JS -->
-                </tbody>
+                <tbody id="csvBody"></tbody>
             </table>
         </div>
         
-        <!-- Cost Breakdown -->
-        <div class="cost-panel" id="costPanel" style="display: none;">
-            <div class="cost-title">💰 Cost Estimation (OpenAI GPT-4o-mini)</div>
-            <div class="cost-breakdown">
+        <div class="cost-panel" id="costPanel">
+            <div class="cost-title">💰 Estimación de Coste (OpenAI GPT-4o-mini)</div>
+            <div class="cost-grid">
                 <div class="cost-item">
                     <div class="cost-value" id="inputTokens">~32K</div>
-                    <div class="cost-label">Input Tokens</div>
+                    <div class="cost-label">Tokens Entrada</div>
                 </div>
                 <div class="cost-item">
                     <div class="cost-value" id="outputTokens">~3.4K</div>
-                    <div class="cost-label">Output Tokens</div>
+                    <div class="cost-label">Tokens Salida</div>
                 </div>
                 <div class="cost-item">
                     <div class="cost-value" id="costPerImage">$0.0007</div>
-                    <div class="cost-label">Per Image</div>
+                    <div class="cost-label">Por Imagen</div>
                 </div>
             </div>
             <div class="cost-total">
                 <div class="cost-total-value" id="totalCost">$0.031</div>
-                <div class="cost-label">Total for 45 images</div>
+                <div class="cost-label">Total para 45 imágenes</div>
             </div>
         </div>
         
         <div class="back-link">
-            <a href="index.html">← Back to Portfolio</a>
+            <a href="index.html">← Volver al Portfolio</a>
         </div>
     </div>
     
@@ -443,32 +365,19 @@
         let isPaused = false;
         
         const sampleData = [
-            { id: 'ring_gold_001', desc: 'Anillo de oro amarillo 18k con diseño clásico. Acabado pulido brillante, banda de 4mm. Perfecto para uso diario o eventos especiales.', words: 87, tokens: 65 },
-            { id: 'necklace_silver_002', desc: 'Collar de plata esterlina 925 con diseño moderno y líneas geométricas. Acabado mate que resalta la textura del metal.', words: 94, tokens: 71 },
-            { id: 'bracelet_leather_003', desc: 'Pulsera de cuero genuino marrón con cierre magnético en acero inoxidable. Estilo casual y versátil para uso diario.', words: 82, tokens: 62 },
-            { id: 'earrings_pearl_004', desc: 'Pendientes de perlas cultivadas con montura en oro blanco de 9k. Diseño clásico y elegante para ocasiones especiales.', words: 91, tokens: 68 },
-            { id: 'watch_classic_005', desc: 'Reloj clásico de cuarzo con esfera blanca y correa de piel negra. Resistente al agua hasta 30 metros.', words: 79, tokens: 59 }
+            { id: 'anillo_oro_001', desc: 'Anillo de oro amarillo 18k con diseño clásico. Acabado pulido brillante, banda de 4mm. Perfecto para uso diario o eventos especiales.', words: 87, tokens: 65 },
+            { id: 'collar_plata_002', desc: 'Collar de plata esterlina 925 con diseño moderno y líneas geométricas. Acabado mate que resalta la textura del metal.', words: 94, tokens: 71 },
+            { id: 'pulsera_cuero_003', desc: 'Pulsera de cuero genuino marrón con cierre magnético en acero inoxidable. Estilo casual y versátil para uso diario.', words: 82, tokens: 62 },
+            { id: 'pendientes_perla_004', desc: 'Pendientes de perlas cultivadas con montura en oro blanco de 9k. Diseño clásico y elegante para ocasiones especiales.', words: 91, tokens: 68 },
+            { id: 'reloj_clasico_005', desc: 'Reloj clásico de cuarzo con esfera blanca y correa de piel negra. Resistente al agua hasta 30 metros.', words: 79, tokens: 59 }
         ];
         
-        // Initialize gallery
-        function initGallery() {
-            const gallery = document.getElementById('gallery');
-            gallery.innerHTML = '';
-            for (let i = 0; i < totalImages; i++) {
-                const item = document.createElement('div');
-                item.className = 'gallery-item';
-                item.id = `img-${i}`;
-                item.innerHTML = i < 5 ? ['💍', '📿', '🎁', '⌚', '👜'][i] : ['👑', '💎', '🎀', '💄', '🕶️'][i % 5];
-                gallery.appendChild(item);
-            }
-        }
-        
-        function addTerminalLine(html, delay = 0) {
+        function addLog(html, delay = 0) {
             return new Promise(resolve => {
                 setTimeout(() => {
                     const body = document.getElementById('terminalBody');
                     const div = document.createElement('div');
-                    div.className = 'output';
+                    div.className = 'log-line';
                     div.innerHTML = html;
                     body.appendChild(div);
                     body.scrollTop = body.scrollHeight;
@@ -486,67 +395,45 @@
             document.getElementById('csvPanel').style.display = 'none';
             document.getElementById('costPanel').style.display = 'none';
             
-            // Initial output
-            await addTerminalLine(`<span class="info">Loading config from config.toml...</span>`, 300);
-            await addTerminalLine(`<span class="info">Found ${totalImages} images to process</span>`, 400);
-            await addTerminalLine(`<span class="muted">Target: 80-100 words per description</span>`, 200);
-            await addTerminalLine(`<span class="muted">Checkpoint: Every 5 rows</span>`, 200);
-            await addTerminalLine(``, 100);
+            await addLog(`<span class="info">Cargando config.toml...</span>`, 300);
+            await addLog(`<span class="info">Encontradas ${totalImages} imágenes para procesar</span>`, 400);
+            await addLog(`<span style="color: #8b949e;">Objetivo: 80-100 palabras por descripción</span>`, 200);
+            await addLog(`<span style="color: #8b949e;">Checkpoint: Cada 5 filas</span>`, 200);
+            await addLog(``, 100);
             
-            // Process images
             for (let i = processedCount; i < totalImages; i++) {
                 if (isPaused) {
-                    await addTerminalLine(`<span class="warning">⚠ Interrupted by user (Ctrl+C)</span>`, 0);
-                    await addTerminalLine(`<span class="info">💾 Checkpoint saved: ${i}/${totalImages} processed</span>`, 100);
+                    await addLog(`<span class="warning">⚠ Interrumpido por usuario (Ctrl+C)</span>`, 0);
+                    await addLog(`<span class="info">💾 Checkpoint guardado: ${i}/${totalImages} procesadas</span>`, 100);
                     break;
                 }
                 
-                // Update gallery
-                const prevItem = document.getElementById(`img-${i-1}`);
-                if (prevItem) prevItem.classList.remove('processing');
-                if (prevItem) prevItem.classList.add('completed');
-                
-                const currentItem = document.getElementById(`img-${i}`);
-                if (currentItem) currentItem.classList.add('processing');
-                
-                // Simulate processing time
                 const delay = 200 + Math.random() * 300;
                 await sleep(delay);
                 
-                // Determine if it's a checkpoint
                 const isCheckpoint = (i + 1) % 5 === 0;
                 const data = sampleData[i % sampleData.length];
                 
-                // Log output
-                await addTerminalLine(`<span class="success">✓</span> <span class="highlight">IMG_${String(i+1).padStart(3, '0')}.jpg</span> → ${data.words} words (${data.tokens} tokens)`, 0);
+                await addLog(`<span class="success">✓</span> <span class="highlight">IMG_${String(i+1).padStart(3, '0')}.jpg</span> → ${data.words} palabras (${data.tokens} tokens)`, 0);
                 
                 if (isCheckpoint) {
-                    await addTerminalLine(`<span class="info">  💾 Checkpoint saved (${i+1}/${totalImages})</span>`, 100);
+                    await addLog(`<span class="info">  💾 Checkpoint guardado (${i+1}/${totalImages})</span>`, 100);
                 }
                 
-                // Update stats
                 processedCount = i + 1;
                 updateStats();
                 
-                // Add to CSV preview (first 5)
                 if (i < 5) {
                     addToCSV(data, i);
                 }
             }
             
-            // Finalize
             if (!isPaused && processedCount === totalImages) {
-                const lastItem = document.getElementById(`img-${totalImages-1}`);
-                if (lastItem) {
-                    lastItem.classList.remove('processing');
-                    lastItem.classList.add('completed');
-                }
-                
-                await addTerminalLine(``, 200);
-                await addTerminalLine(`<span class="success">✓ Processing complete!</span>`, 100);
-                await addTerminalLine(`<span class="info">  Total: ${totalImages} images processed</span>`, 100);
-                await addTerminalLine(`<span class="info">  Output: data/creatives_master.csv</span>`, 100);
-                await addTerminalLine(`<span class="info">  Est. cost: $0.031</span>`, 100);
+                await addLog(``, 200);
+                await addLog(`<span class="success">✓ ¡Procesamiento completado!</span>`, 100);
+                await addLog(`<span class="info">  Total: ${totalImages} imágenes procesadas</span>`, 100);
+                await addLog(`<span class="info">  Output: data/creatives_master.csv</span>`, 100);
+                await addLog(`<span class="info">  Coste estimado: $0.031</span>`, 100);
                 
                 document.getElementById('csvPanel').style.display = 'block';
                 document.getElementById('costPanel').style.display = 'block';
@@ -564,14 +451,13 @@
             
             await sleep(1500);
             
-            // Resume
             isPaused = false;
             isProcessing = false;
-            await addTerminalLine(``, 300);
-            await addTerminalLine(`<span class="cmd-prompt">$ </span><span class="cmd-text">python -m src.main describe-all</span>`, 300);
-            await addTerminalLine(`<span class="info">Resuming from checkpoint...</span>`, 400);
-            await addTerminalLine(`<span class="info">Skipping ${processedCount} already processed images</span>`, 400);
-            await addTerminalLine(``, 200);
+            await addLog(``, 300);
+            await addLog(`<span style="color: #7ee787;">$ </span><span>python -m src.main describe-all</span>`, 300);
+            await addLog(`<span class="info">Reanudando desde checkpoint...</span>`, 400);
+            await addLog(`<span class="info">Saltando ${processedCount} imágenes ya procesadas</span>`, 400);
+            await addLog(``, 200);
             
             startDemo();
         }
@@ -603,9 +489,9 @@
             isPaused = false;
             
             document.getElementById('terminalBody').innerHTML = `
-                <div class="cmd-line">
-                    <span class="cmd-prompt">$ </span>
-                    <span class="cmd-text">python -m src.main describe-all</span>
+                <div style="margin-bottom: 8px;">
+                    <span style="color: #7ee787;">$ </span>
+                    <span>python -m src.main describe-all</span>
                 </div>
             `;
             document.getElementById('csvBody').innerHTML = '';
@@ -615,15 +501,12 @@
             document.getElementById('resumeBtn').disabled = true;
             
             updateStats();
-            initGallery();
         }
         
         function sleep(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
         }
         
-        // Initialize
-        initGallery();
         updateStats();
     </script>
 </body>

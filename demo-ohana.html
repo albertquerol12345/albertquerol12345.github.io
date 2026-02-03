@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ohana Voice Demo - Offline Voice Ordering</title>
+    <title>Ohana Voice Demo - Comandas por Voz</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -19,8 +19,8 @@
         }
         h1 {
             text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: 2.2rem;
+            margin-bottom: 8px;
             background: linear-gradient(90deg, #a78bfa, #f472b6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -28,10 +28,9 @@
         .subtitle {
             text-align: center;
             color: #a78bfa;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
         
-        /* Kitchen Environment Indicator */
         .environment-badge {
             display: inline-flex;
             align-items: center;
@@ -47,22 +46,21 @@
         .demo-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            gap: 24px;
         }
         @media (max-width: 900px) {
             .demo-grid { grid-template-columns: 1fr; }
         }
         
-        /* Menu Panel */
         .panel {
             background: rgba(45, 27, 78, 0.8);
             border-radius: 16px;
-            padding: 25px;
+            padding: 24px;
             border: 1px solid rgba(167, 139, 250, 0.2);
         }
         .panel h2 {
-            font-size: 1.3rem;
-            margin-bottom: 20px;
+            font-size: 1.1rem;
+            margin-bottom: 16px;
             color: #a78bfa;
         }
         
@@ -80,13 +78,9 @@
             border-color: #a78bfa;
             box-shadow: 0 0 30px rgba(167, 139, 250, 0.3);
         }
-        .voice-status.detected {
-            border-color: #22c55e;
-        }
         .mic-icon {
-            font-size: 3rem;
+            font-size: 2.5rem;
             margin-bottom: 10px;
-            transition: transform 0.2s;
         }
         .voice-status.listening .mic-icon {
             animation: pulse 1.5s infinite;
@@ -96,20 +90,20 @@
             50% { transform: scale(1.1); }
         }
         .voice-text {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #94a3b8;
-            min-height: 30px;
+            min-height: 24px;
         }
         .voice-text.active {
             color: #a78bfa;
             font-weight: 600;
         }
         
-        /* Voice Commands */
+        /* Command Buttons */
         .commands {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
             justify-content: center;
             margin-top: 15px;
         }
@@ -117,10 +111,10 @@
             background: rgba(167, 139, 250, 0.2);
             border: 1px solid rgba(167, 139, 250, 0.4);
             color: #e2e8f0;
-            padding: 10px 18px;
+            padding: 8px 14px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             transition: all 0.2s;
         }
         .command-btn:hover {
@@ -128,18 +122,20 @@
             transform: translateY(-2px);
         }
         
-        /* Menu Grid */
+        /* Menu Grid - Las hamburguesas REALES de Albert */
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-top: 20px;
+            gap: 10px;
+            margin-top: 16px;
+            max-height: 320px;
+            overflow-y: auto;
         }
         .menu-item {
             background: rgba(15, 23, 42, 0.6);
             border: 2px solid transparent;
-            border-radius: 12px;
-            padding: 15px;
+            border-radius: 10px;
+            padding: 12px;
             cursor: pointer;
             transition: all 0.2s;
             text-align: center;
@@ -148,22 +144,18 @@
             border-color: #a78bfa;
             background: rgba(167, 139, 250, 0.1);
         }
-        .menu-item.selected {
-            border-color: #a78bfa;
-            background: rgba(167, 139, 250, 0.2);
-        }
         .item-icon {
-            font-size: 2rem;
-            margin-bottom: 8px;
+            font-size: 1.8rem;
+            margin-bottom: 4px;
         }
         .item-name {
             font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 4px;
+            font-size: 0.85rem;
+            margin-bottom: 2px;
         }
         .item-price {
             color: #a78bfa;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
         
         /* Current Order */
@@ -190,10 +182,12 @@
             color: white;
             padding: 4px 12px;
             border-radius: 20px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
         .order-items {
             min-height: 100px;
+            max-height: 200px;
+            overflow-y: auto;
         }
         .order-item {
             display: flex;
@@ -209,14 +203,13 @@
             from { opacity: 0; transform: translateX(-20px); }
             to { opacity: 1; transform: translateX(0); }
         }
-        .order-item-info {
-            flex: 1;
-        }
+        .order-item-info { flex: 1; }
         .order-item-name {
             font-weight: 500;
+            font-size: 0.9rem;
         }
-        .order-item-mods {
-            font-size: 0.8rem;
+        .order-item-ingredients {
+            font-size: 0.75rem;
             color: #94a3b8;
         }
         .order-item-price {
@@ -232,46 +225,51 @@
             cursor: pointer;
             margin-left: 10px;
         }
-        
         .order-total {
             display: flex;
             justify-content: space-between;
             padding-top: 15px;
             margin-top: 15px;
             border-top: 2px solid rgba(148, 163, 184, 0.2);
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
         }
-        
         .send-order-btn {
             width: 100%;
             margin-top: 20px;
-            padding: 15px;
+            padding: 14px;
             background: linear-gradient(135deg, #a78bfa, #f472b6);
             border: none;
             border-radius: 12px;
             color: white;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 700;
             cursor: pointer;
             transition: transform 0.2s;
         }
-        .send-order-btn:hover {
+        .send-order-btn:hover:not(:disabled) {
             transform: translateY(-2px);
         }
         .send-order-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            transform: none;
         }
         
-        /* Kitchen Display */
+        /* Kitchen Ticket */
         .kitchen-panel {
             background: #0f172a;
             border-radius: 12px;
             padding: 20px;
             margin-top: 20px;
-            min-height: 200px;
+            display: none;
+        }
+        .kitchen-panel.show {
+            display: block;
+            animation: ticketPrint 0.5s;
+        }
+        @keyframes ticketPrint {
+            from { opacity: 0; transform: scaleY(0); }
+            to { opacity: 1; transform: scaleY(1); }
         }
         .kitchen-header {
             display: flex;
@@ -287,11 +285,6 @@
             padding: 15px;
             border-radius: 8px;
             font-family: monospace;
-            animation: ticketPrint 0.5s;
-        }
-        @keyframes ticketPrint {
-            from { opacity: 0; transform: scaleY(0); }
-            to { opacity: 1; transform: scaleY(1); }
         }
         .ticket-header {
             border-bottom: 2px dashed #ccc;
@@ -302,6 +295,7 @@
         }
         .ticket-item {
             padding: 5px 0;
+            font-size: 0.9rem;
         }
         .ticket-total {
             border-top: 2px dashed #ccc;
@@ -311,17 +305,6 @@
             text-align: right;
         }
         
-        /* Back Link */
-        .back-link {
-            text-align: center;
-            margin-top: 30px;
-        }
-        .back-link a {
-            color: #a78bfa;
-            text-decoration: none;
-        }
-        
-        /* Noise Indicator */
         .noise-indicator {
             display: flex;
             align-items: center;
@@ -330,7 +313,7 @@
             padding: 12px;
             background: rgba(245, 158, 11, 0.1);
             border-radius: 8px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #f59e0b;
         }
         .noise-bars {
@@ -354,35 +337,54 @@
             0%, 100% { opacity: 0.5; }
             50% { opacity: 1; }
         }
+        
+        .back-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .back-link a {
+            color: #a78bfa;
+            text-decoration: none;
+        }
+        
+        .asr-badge {
+            display: inline-block;
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🎤 Ohana Voice Demo</h1>
-        <p class="subtitle">Offline Voice Ordering for Kitchen Environments</p>
+        <h1>🎤 Ohana Voice</h1>
+        <p class="subtitle">Comandas por voz para cocinas QSR - Modo Offline</p>
         
         <div style="text-align: center;">
             <span class="environment-badge">
-                🔊 Simulating: Noisy Kitchen Environment | Offline Mode | No Cloud
+                🔊 Entorno: Cocina con ruido | Vosk/Kaldi Offline | Sin Cloud
             </span>
         </div>
         
         <div class="demo-grid">
-            <!-- Left Panel: Menu & Voice -->
+            <!-- Left: Menu -->
             <div>
                 <div class="panel">
-                    <h2>🎙️ Voice Input</h2>
+                    <h2>🎙️ Comando de Voz <span class="asr-badge">ASR Activo</span></h2>
                     <div class="voice-status" id="voiceStatus">
                         <div class="mic-icon">🎤</div>
-                        <div class="voice-text" id="voiceText">Click a command or menu item</div>
+                        <div class="voice-text" id="voiceText">Haz clic en un comando o hamburguesa</div>
                     </div>
                     
                     <div class="commands">
-                        <button class="command-btn" onclick="simulateVoice('Doble cheese')">"Doble cheese"</button>
-                        <button class="command-btn" onclick="simulateVoice('Con bacon')">"Con bacon"</button>
-                        <button class="command-btn" onclick="simulateVoice('Sin cebolla')">"Sin cebolla"</button>
-                        <button class="command-btn" onclick="simulateVoice('Coca cola grande')">"Coca cola grande"</button>
-                        <button class="command-btn" onclick="sendToKitchen()">"Enviar pedido"</button>
+                        <button class="command-btn" onclick="simulateVoice('una Big Ohana')">"una Big Ohana"</button>
+                        <button class="command-btn" onclick="simulateVoice('una Boo con cheddar')">"una Boo con cheddar"</button>
+                        <button class="command-btn" onclick="simulateVoice('una Cobra')">"una Cobra"</button>
+                        <button class="command-btn" onclick="simulateVoice('una Dormilona')">"una Dormilona"</button>
+                        <button class="command-btn" onclick="simulateVoice('enviar pedido')">"enviar pedido"</button>
                     </div>
                     
                     <div class="noise-indicator">
@@ -393,29 +395,31 @@
                             <div class="noise-bar"></div>
                             <div class="noise-bar"></div>
                         </div>
-                        <span>VAD: Filtering kitchen noise (grills, fryers, conversations)</span>
+                        <span>VAD: Filtrando ruido de cocina (parrillas, freidoras)</span>
                     </div>
                 </div>
                 
                 <div class="panel" style="margin-top: 20px;">
-                    <h2>📋 Menu (19 items)</h2>
+                    <h2>🍔 Menú Ohana (19 items)</h2>
                     <div class="menu-grid" id="menuGrid">
-                        <!-- Populated by JS -->
+                        <!-- Se llena con JS - las hamburguesas REALES -->
                     </div>
                 </div>
             </div>
             
-            <!-- Right Panel: Order & Kitchen -->
+            <!-- Right: Order & Kitchen -->
             <div>
                 <div class="panel">
-                    <h2>🛒 Current Order</h2>
+                    <h2>🛒 Pedido Actual</h2>
                     <div class="order-panel">
                         <div class="order-header">
-                            <span class="order-title">Order #<span id="orderNumber">042</span></span>
+                            <span class="order-title">Pedido #<span id="orderNumber">042</span></span>
                             <span class="order-count" id="itemCount">0 items</span>
                         </div>
                         <div class="order-items" id="orderItems">
-                            <p style="color: #64748b; text-align: center; padding: 20px;">No items yet. Use voice commands or click menu items.</p>
+                            <p style="color: #64748b; text-align: center; padding: 20px;">
+                                Sin items. Usa comandos de voz o haz clic en el menú.
+                            </p>
                         </div>
                         <div class="order-total">
                             <span>Total:</span>
@@ -423,14 +427,14 @@
                         </div>
                     </div>
                     <button class="send-order-btn" id="sendBtn" onclick="sendToKitchen()" disabled>
-                        Send to Kitchen
+                        Enviar a Cocina
                     </button>
                 </div>
                 
-                <div class="panel kitchen-panel" id="kitchenPanel" style="display: none;">
+                <div class="panel kitchen-panel" id="kitchenPanel">
                     <div class="kitchen-header">
                         <span>🖨️</span>
-                        <span>Kitchen Display - Order Received</span>
+                        <span>Ticket de Cocina - Pedido Recibido</span>
                     </div>
                     <div id="kitchenTicket"></div>
                 </div>
@@ -438,43 +442,44 @@
         </div>
         
         <div class="back-link">
-            <a href="index.html">← Back to Portfolio</a>
+            <a href="index.html">← Volver al Portfolio</a>
         </div>
     </div>
     
     <script>
+        // HAMBURGUESAS REALES del proyecto de Albert
         const menuItems = [
-            { id: 1, name: 'Doble Cheese', price: 8.50, icon: '🍔' },
-            { id: 2, name: 'Classic Burger', price: 7.90, icon: '🍔' },
-            { id: 3, name: 'BBQ Bacon', price: 9.20, icon: '🥓' },
-            { id: 4, name: 'Chicken Crispy', price: 8.90, icon: '🍗' },
-            { id: 5, name: 'Veggie Deluxe', price: 8.50, icon: '🥬' },
-            { id: 6, name: 'Fries Small', price: 2.50, icon: '🍟' },
-            { id: 7, name: 'Fries Large', price: 3.50, icon: '🍟' },
-            { id: 8, name: 'Onion Rings', price: 3.20, icon: '🧅' },
-            { id: 9, name: 'Nuggets (6)', price: 4.50, icon: '🍗' },
-            { id: 10, name: 'Coca-Cola S', price: 2.00, icon: '🥤' },
-            { id: 11, name: 'Coca-Cola L', price: 2.80, icon: '🥤' },
-            { id: 12, name: 'Fanta Naranja', price: 2.50, icon: '🥤' },
-            { id: 13, name: 'Sprite', price: 2.50, icon: '🥤' },
-            { id: 14, name: 'Agua', price: 1.50, icon: '💧' },
-            { id: 15, name: 'Café', price: 1.80, icon: '☕' },
-            { id: 16, name: 'McFlurry Oreo', price: 3.50, icon: '🍦' },
-            { id: 17, name: 'Apple Pie', price: 2.80, icon: '🥧' },
-            { id: 18, name: 'Sundae', price: 2.50, icon: '🍨' },
-            { id: 19, name: 'Hash Browns', price: 2.20, icon: '🥔' }
+            { key: "Big Ohana", display: "La Big Ohana", price: 12.40, icon: "🍔", ingredients: ["Cheddar", "cebolla", "lechuga", "pepinillo", "salsa big ohana"] },
+            { key: "Boo", display: "La Boo", price: 12.40, icon: "🍔", ingredients: ["Cheddar", "salsa boloñesa"] },
+            { key: "Cobra", display: "La Cobra", price: 11.90, icon: "🐍", ingredients: ["Ternera", "queso de cabra", "gorgonzola", "cheddar", "salsa 4 quesos"] },
+            { key: "Dormilona", display: "La Dormilona", price: 11.40, icon: "😴", ingredients: ["Ternera", "queso de cabra", "cebolla caramelizada", "rúcula"] },
+            { key: "Gamba", display: "La Gamba", price: 11.90, icon: "🦐", ingredients: ["Gambas", "salsa gambas"] },
+            { key: "Grumete", display: "El Grumete", price: 11.40, icon: "⚓", ingredients: ["Pollo", "salsa marinera"] },
+            { key: "Kelly", display: "La Kelly", price: 12.90, icon: "🍔", ingredients: ["Doble carne", "doble cheddar", "bacon", "salsa kelly"] },
+            { key: "Lilo", display: "La Lilo", price: 12.40, icon: "🌺", ingredients: ["Carne", "piña", "salsa dulce"] },
+            { key: "Little Ohana", display: "Little Ohana", price: 8.90, icon: "🍔", ingredients: ["Carne pequeña", "cheddar"] },
+            { key: "Norma", display: "La Norma", price: 10.90, icon: "🍔", ingredients: ["Carne", "tomate", "lechuga"] },
+            { key: "Ohana", display: "La Ohana", price: 10.90, icon: "🍔", ingredients: ["Carne", "salsa ohana"] },
+            { key: "Parmigiana", display: "La Parmigiana", price: 12.90, icon: "🍔", ingredients: ["Pollo", "parmesano", "salsa tomate"] },
+            { key: "Pina", display: "La Pina", price: 10.90, icon: "🍍", ingredients: ["Carne", "piña", "salsa"] },
+            { key: "Pollo Crujiente", display: "Pollo Crujiente", price: 10.90, icon: "🍗", ingredients: ["Pollo crujiente", "salsa"] },
+            { key: "Stitch", display: "El Stitch", price: 11.90, icon: "👽", ingredients: ["Carne", "salsa stitch"] },
+            { key: "Surf", display: "El Surf", price: 12.40, icon: "🏄", ingredients: ["Pescado", "salsa surf"] },
+            { key: "WasoBurger", display: "La WasoBurger", price: 12.40, icon: "🍔", ingredients: ["Carne", "salsa especial waso"] },
+            { key: "Wichy", display: "El Wichy", price: 12.40, icon: "🥪", ingredients: ["Pollo", "salsa wichy"] },
+            { key: "Biko", display: "La Biko", price: 11.90, icon: "🍔", ingredients: ["Carne", "salsa biko"] }
         ];
         
         let order = [];
-        let currentMods = [];
+        let currentExtras = [];
         
         // Render menu
         function renderMenu() {
             const grid = document.getElementById('menuGrid');
-            grid.innerHTML = menuItems.map(item => `
-                <div class="menu-item" onclick="addToOrder(${item.id})">
+            grid.innerHTML = menuItems.map((item, index) => `
+                <div class="menu-item" onclick="addToOrder(${index})">
                     <div class="item-icon">${item.icon}</div>
-                    <div class="item-name">${item.name}</div>
+                    <div class="item-name">${item.display}</div>
                     <div class="item-price">€${item.price.toFixed(2)}</div>
                 </div>
             `).join('');
@@ -484,58 +489,59 @@
             const status = document.getElementById('voiceStatus');
             const voiceText = document.getElementById('voiceText');
             
-            // Listening state
             status.classList.add('listening');
-            voiceText.textContent = 'Listening...';
-            await sleep(800);
+            voiceText.textContent = 'Escuchando...';
+            await sleep(600);
             
-            // Detected
             status.classList.remove('listening');
-            status.classList.add('detected');
-            voiceText.textContent = `Detected: "${text}"`;
+            voiceText.textContent = `Detectado: "${text}"`;
             
-            // Process command
             await processCommand(text);
             
             await sleep(1500);
-            status.classList.remove('detected');
-            voiceText.textContent = 'Ready for next command...';
+            voiceText.textContent = 'Listo para siguiente comando...';
         }
         
         async function processCommand(text) {
             const lower = text.toLowerCase();
             
-            if (lower.includes('doble cheese')) {
-                addToOrder(1);
-            } else if (lower.includes('classic')) {
-                addToOrder(2);
-            } else if (lower.includes('bbq') || lower.includes('bacon')) {
-                if (order.length > 0) {
-                    currentMods.push('+Bacon');
-                    updateOrderDisplay();
-                    await sleep(300);
-                } else {
-                    addToOrder(3);
+            if (lower.includes('big ohana')) {
+                addToOrder(0);
+            } else if (lower.includes('boo')) {
+                if (lower.includes('cheddar')) {
+                    currentExtras.push('+Cheddar extra');
                 }
-            } else if (lower.includes('cebolla')) {
-                currentMods.push('-Onion');
-                updateOrderDisplay();
-            } else if (lower.includes('coca cola grande')) {
-                addToOrder(11);
+                addToOrder(1);
+            } else if (lower.includes('cobra')) {
+                addToOrder(2);
+            } else if (lower.includes('dormilona')) {
+                addToOrder(3);
+            } else if (lower.includes('gamba')) {
+                addToOrder(4);
+            } else if (lower.includes('grumete')) {
+                addToOrder(5);
+            } else if (lower.includes('kelly')) {
+                addToOrder(6);
+            } else if (lower.includes('lilo')) {
+                addToOrder(7);
+            } else if (lower.includes('waso')) {
+                addToOrder(16);
+            } else if (lower.includes('biko')) {
+                addToOrder(18);
             } else if (lower.includes('enviar')) {
                 sendToKitchen();
             }
         }
         
-        function addToOrder(itemId) {
-            const item = menuItems.find(i => i.id === itemId);
+        function addToOrder(index) {
+            const item = menuItems[index];
             const orderItem = {
                 ...item,
-                mods: [...currentMods],
+                extras: [...currentExtras],
                 uniqueId: Date.now()
             };
             order.push(orderItem);
-            currentMods = [];
+            currentExtras = [];
             updateOrderDisplay();
         }
         
@@ -551,7 +557,7 @@
             const sendBtn = document.getElementById('sendBtn');
             
             if (order.length === 0) {
-                container.innerHTML = '<p style="color: #64748b; text-align: center; padding: 20px;">No items yet. Use voice commands or click menu items.</p>';
+                container.innerHTML = '<p style="color: #64748b; text-align: center; padding: 20px;">Sin items. Usa comandos de voz o haz clic en el menú.</p>';
                 countEl.textContent = '0 items';
                 totalEl.textContent = '€0.00';
                 sendBtn.disabled = true;
@@ -561,8 +567,9 @@
             container.innerHTML = order.map(item => `
                 <div class="order-item">
                     <div class="order-item-info">
-                        <div class="order-item-name">${item.icon} ${item.name}</div>
-                        ${item.mods.length ? `<div class="order-item-mods">${item.mods.join(', ')}</div>` : ''}
+                        <div class="order-item-name">${item.icon} ${item.display}</div>
+                        <div class="order-item-ingredients">${item.ingredients.slice(0, 3).join(', ')}${item.ingredients.length > 3 ? '...' : ''}</div>
+                        ${item.extras.length ? `<div style="color: #22c55e; font-size: 0.75rem;">${item.extras.join(', ')}</div>` : ''}
                     </div>
                     <span class="order-item-price">€${item.price.toFixed(2)}</span>
                     <button class="remove-btn" onclick="removeFromOrder(${item.uniqueId})">×</button>
@@ -579,10 +586,9 @@
             if (order.length === 0) return;
             
             const btn = document.getElementById('sendBtn');
-            btn.textContent = 'Sending...';
+            btn.textContent = 'Enviando...';
             await sleep(800);
             
-            // Show kitchen panel
             const kitchenPanel = document.getElementById('kitchenPanel');
             const kitchenTicket = document.getElementById('kitchenTicket');
             
@@ -593,13 +599,13 @@
                 <div class="kitchen-ticket">
                     <div class="ticket-header">
                         🍔 OHANA KITCHEN<br>
-                        Order #${orderNum}<br>
-                        ${new Date().toLocaleTimeString()}
+                        Pedido #${orderNum}<br>
+                        ${new Date().toLocaleTimeString('es-ES')}
                     </div>
                     ${order.map(item => `
                         <div class="ticket-item">
-                            1x ${item.name}<br>
-                            ${item.mods.length ? `   ${item.mods.join(' ')}` : ''}
+                            1x ${item.display}<br>
+                            <small>${item.ingredients.slice(0, 2).join(', ')}</small>
                         </div>
                     `).join('')}
                     <div class="ticket-total">
@@ -608,15 +614,13 @@
                 </div>
             `;
             
-            kitchenPanel.style.display = 'block';
+            kitchenPanel.classList.add('show');
             
-            // Reset order
             order = [];
             updateOrderDisplay();
-            btn.textContent = 'Send to Kitchen';
+            btn.textContent = 'Enviar a Cocina';
             btn.disabled = true;
             
-            // Increment order number
             document.getElementById('orderNumber').textContent = String(parseInt(orderNum) + 1).padStart(3, '0');
         }
         
@@ -624,7 +628,6 @@
             return new Promise(resolve => setTimeout(resolve, ms));
         }
         
-        // Initialize
         renderMenu();
     </script>
 </body>
