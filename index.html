@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Albert Querol — Automation Portfolio</title>
+    <title>Albert Querol — Technical Demonstrations</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -16,60 +16,53 @@
     <div class="bg"></div>
     <main class="container">
       <header class="hero">
-        <p class="eyebrow">Automation + Ops + Accounting</p>
+        <p class="eyebrow">Python Automation & Data Pipelines</p>
         <h1>Albert Querol</h1>
         <p class="lead">
-          Junior Python automation focused on ops and accounting workflows. Real projects with demos,
-          human-in-the-loop review, and practical reliability patterns.
+          Technical demonstrations of production-grade patterns. I build sandbox implementations 
+          that show how I think about architecture, edge cases, and resilient systems.
         </p>
         <div class="cta-row">
-          <a class="btn" href="https://github.com/albertquerol12345" target="_blank" rel="noreferrer">GitHub</a>
-          <a class="btn ghost" href="mailto:albertquerol12345@gmail.com">Contact</a>
+          <a class="btn" href="https://github.com/albertquerol12345" target="_blank" rel="noreferrer">View GitHub</a>
+          <a class="btn ghost" href="mailto:albert.querol.beltran@gmail.com">Contact</a>
         </div>
       </header>
 
-      <!-- Metrics Section -->
-      <section class="metrics">
-        <div class="metric">
-          <span class="metric-value">3</span>
-          <span class="metric-label">Projects</span>
-        </div>
-        <div class="metric">
-          <span class="metric-value">34</span>
-          <span class="metric-label">Demo Invoices</span>
-        </div>
-        <div class="metric">
-          <span class="metric-value">19</span>
-          <span class="metric-label">Voice Items</span>
-        </div>
-        <div class="metric">
-          <span class="metric-value">&lt;5min</span>
-          <span class="metric-label">To Run Any</span>
-        </div>
+      <!-- Clarification Banner -->
+      <section class="clarification">
+        <p>
+          <strong>What this is:</strong> Architectural demonstrations (not commercial products). 
+          Each project shows specific production patterns: resilient pipelines, HITL systems, 
+          offline processing. See <a href="#what-to-evaluate">what to evaluate</a>.
+        </p>
       </section>
 
+      <!-- Projects Grid -->
       <section class="grid">
         <article class="card">
           <div class="card-head">
             <h2>Certiva</h2>
-            <span>Invoice automation + HITL</span>
+            <span>Document Processing Pipeline</span>
           </div>
-          <img
-            src="https://raw.githubusercontent.com/albertquerol12345/certiva/main/assets/preview.gif"
-            alt="Certiva preview"
-            loading="lazy"
-          />
-          <ul>
-            <li>OCR -> normalization -> rules -> export</li>
-            <li>HITL queue with audit trail and confidence scoring</li>
-            <li>Retries, throttling, and metrics for ops reliability</li>
-          </ul>
+          <div class="card-meta">
+            <span class="tag">34 demo invoices</span>
+            <span class="tag">OCR + HITL</span>
+            <span class="tag">Circuit breakers</span>
+          </div>
+          <p class="card-desc">
+            Demonstrates resilient OCR pipelines with human-in-the-loop review, 
+            audit trails, and multi-tenant architecture. Processes PDFs through 
+            normalization, validation, and export with full observability.
+          </p>
+          <div class="card-patterns">
+            <strong>Patterns:</strong> Pipeline, Circuit Breaker, Repository, HITL
+          </div>
           <div class="card-links">
             <a class="link" href="https://github.com/albertquerol12345/certiva" target="_blank" rel="noreferrer">
-              View repo →
+              View Code →
             </a>
             <a class="link secondary" href="https://github.com/albertquerol12345/certiva/blob/main/DEMO.md" target="_blank" rel="noreferrer">
-              Run demo →
+              Run Demo →
             </a>
           </div>
         </article>
@@ -77,74 +70,135 @@
         <article class="card">
           <div class="card-head">
             <h2>Ohana Voice</h2>
-            <span>Offline-first voice ordering</span>
+            <span>Offline Voice Recognition</span>
           </div>
-          <img
-            src="https://raw.githubusercontent.com/albertquerol12345/ohana-voice/main/assets/preview.gif"
-            alt="Ohana Voice preview"
-            loading="lazy"
-          />
-          <ul>
-            <li>Local ASR with Vosk/Kaldi grammar mode</li>
-            <li>Human validation for noisy QSR environments</li>
-            <li>Lightweight UI for kitchen ops</li>
-          </ul>
+          <div class="card-meta">
+            <span class="tag">19-item catalog</span>
+            <span class="tag">Offline ASR</span>
+            <span class="tag">Browser demo</span>
+          </div>
+          <p class="card-desc">
+            Demonstrates offline voice ordering for noisy environments. Uses local 
+            ASR (Vosk/Kaldi) with voice activity detection and human validation 
+            before confirmation. No cloud dependencies.
+          </p>
+          <div class="card-patterns">
+            <strong>Patterns:</strong> Event-driven, WebSocket streaming, State machine
+          </div>
           <div class="card-links">
             <a class="link" href="https://github.com/albertquerol12345/ohana-voice" target="_blank" rel="noreferrer">
-              View repo →
+              View Code →
             </a>
             <a class="link secondary" href="https://github.com/albertquerol12345/ohana-voice/blob/main/DEMO.md" target="_blank" rel="noreferrer">
-              Run demo →
+              Run Demo →
             </a>
           </div>
         </article>
 
         <article class="card">
           <div class="card-head">
-            <h2>Vision Descr Pipeline</h2>
-            <span>Image -> description -> CSV</span>
+            <h2>Vision Pipeline</h2>
+            <span>Batch API Processing</span>
           </div>
-          <img
-            src="https://raw.githubusercontent.com/albertquerol12345/vision-descr-pipeline/main/assets/preview.gif"
-            alt="Vision Description preview"
-            loading="lazy"
-          />
-          <ul>
-            <li>CLI to enrich image datasets with descriptions</li>
-            <li>Resumable processing with logs and stats</li>
-            <li>Clean output ready for analytics</li>
-          </ul>
+          <div class="card-meta">
+            <span class="tag">~$0.03/400 imgs</span>
+            <span class="tag">Resumable</span>
+            <span class="tag">Checkpointing</span>
+          </div>
+          <p class="card-desc">
+            Demonstrates resilient batch processing with external APIs. Features 
+            checkpointing every N rows, idempotency, and cost optimization. 
+            Survives interruptions without data loss.
+          </p>
+          <div class="card-patterns">
+            <strong>Patterns:</strong> Pipeline, Checkpoint/Restore, Idempotency
+          </div>
           <div class="card-links">
             <a class="link" href="https://github.com/albertquerol12345/vision-descr-pipeline" target="_blank" rel="noreferrer">
-              View repo →
+              View Code →
             </a>
             <a class="link secondary" href="https://github.com/albertquerol12345/vision-descr-pipeline/blob/main/DEMO.md" target="_blank" rel="noreferrer">
-              Run demo →
+              Run Demo →
             </a>
           </div>
         </article>
       </section>
 
+      <!-- What to Evaluate Section -->
+      <section id="what-to-evaluate" class="evaluation">
+        <h2>For Technical Reviewers</h2>
+        <p class="eval-intro">
+          These are <strong>architectural demonstrations</strong>, not finished products. 
+          Here's what to look for:
+        </p>
+        
+        <div class="eval-grid">
+          <div class="eval-item">
+            <h3>🏗️ Architecture</h3>
+            <ul>
+              <li>Clean separation of concerns</li>
+              <li>Pipeline and repository patterns</li>
+              <li>Configuration management</li>
+              <li>Multi-tenant isolation</li>
+            </ul>
+          </div>
+          <div class="eval-item">
+            <h3>🛡️ Resilience</h3>
+            <ul>
+              <li>Circuit breakers</li>
+              <li>Retry logic with backoff</li>
+              <li>Checkpointing and resumability</li>
+              <li>Graceful degradation</li>
+            </ul>
+          </div>
+          <div class="eval-item">
+            <h3>🧪 Code Quality</h3>
+            <ul>
+              <li>Type hints throughout</li>
+              <li>70%+ test coverage</li>
+              <li>Documentation and docstrings</li>
+              <li>Error handling completeness</li>
+            </ul>
+          </div>
+          <div class="eval-item">
+            <h3>🔍 Edge Cases</h3>
+            <ul>
+              <li>OCR failures handled</li>
+              <li>Data validation (amounts, dates)</li>
+              <li>API rate limiting</li>
+              <li>Audit trails for debugging</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
       <!-- About Section -->
       <section class="about">
-        <h2>About</h2>
+        <h2>About Me</h2>
         <p>
-          I bridge operations and code. 3+ years managing shifts at McDonald's taught me what breaks 
-          in real processes; SAP FI certification gave me the accounting foundation. Now I build 
-          Python tools that reduce administrative overhead and prevent errors at scale.
+          I'm a junior Python developer with 3+ years of operational experience (Shift Manager at McDonald's) 
+          and SAP FI certification. I understand what breaks in real processes because I've lived it.
         </p>
         <p>
-          Based in Barcelona. Open to junior automation, ops tech, or accounting automation roles.
+          My value is in <strong>operational context</strong> + <strong>technical implementation</strong>. 
+          I don't just write code; I think about what happens when the OCR fails, when the API is down, 
+          when the user makes an error.
+        </p>
+        <p>
+          Based in Barcelona. Looking for junior automation, data pipeline, or backend roles.
         </p>
       </section>
 
+      <!-- Footer -->
       <section class="footer">
         <p>
           <a href="https://github.com/albertquerol12345" target="_blank" rel="noreferrer">GitHub</a> · 
-          <a href="mailto:albertquerol12345@gmail.com">Email</a> · 
-          <a href="https://www.linkedin.com/in/albertquerolbeltran" target="_blank" rel="noreferrer">LinkedIn</a>
+          <a href="https://linkedin.com/in/albertquerolbeltran" target="_blank" rel="noreferrer">LinkedIn</a> · 
+          <a href="mailto:albert.querol.beltran@gmail.com">Email</a>
         </p>
-        <p class="small">All projects demo-scale, fully documented, runnable in &lt; 5 minutes.</p>
+        <p class="small">
+          All projects are demo-scale technical demonstrations. Runnable in under 5 minutes.
+        </p>
       </section>
     </main>
   </body>
