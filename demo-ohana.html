@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ohana Voice Demo - Offline Voice Ordering</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1a0f2e 0%, #2d1b4e 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle {
+            text-align: center;
+            color: #a78bfa;
+            margin-bottom: 30px;
+        }
+        
+        /* Kitchen Environment Indicator */
+        .environment-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(167, 139, 250, 0.2);
+            border: 1px solid #a78bfa;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        @media (max-width: 900px) {
+            .demo-grid { grid-template-columns: 1fr; }
+        }
+        
+        /* Menu Panel */
+        .panel {
+            background: rgba(45, 27, 78, 0.8);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(167, 139, 250, 0.2);
+        }
+        .panel h2 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #a78bfa;
+        }
+        
+        /* Voice Status */
+        .voice-status {
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        .voice-status.listening {
+            border-color: #a78bfa;
+            box-shadow: 0 0 30px rgba(167, 139, 250, 0.3);
+        }
+        .voice-status.detected {
+            border-color: #22c55e;
+        }
+        .mic-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            transition: transform 0.2s;
+        }
+        .voice-status.listening .mic-icon {
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .voice-text {
+            font-size: 1.1rem;
+            color: #94a3b8;
+            min-height: 30px;
+        }
+        .voice-text.active {
+            color: #a78bfa;
+            font-weight: 600;
+        }
+        
+        /* Voice Commands */
+        .commands {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        .command-btn {
+            background: rgba(167, 139, 250, 0.2);
+            border: 1px solid rgba(167, 139, 250, 0.4);
+            color: #e2e8f0;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .command-btn:hover {
+            background: rgba(167, 139, 250, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        /* Menu Grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .menu-item {
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .menu-item:hover {
+            border-color: #a78bfa;
+            background: rgba(167, 139, 250, 0.1);
+        }
+        .menu-item.selected {
+            border-color: #a78bfa;
+            background: rgba(167, 139, 250, 0.2);
+        }
+        .item-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        .item-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+        .item-price {
+            color: #a78bfa;
+            font-size: 0.85rem;
+        }
+        
+        /* Current Order */
+        .order-panel {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+        }
+        .order-title {
+            font-weight: 600;
+            color: #a78bfa;
+        }
+        .order-count {
+            background: #a78bfa;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        .order-items {
+            min-height: 100px;
+        }
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            animation: slideIn 0.3s;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .order-item-info {
+            flex: 1;
+        }
+        .order-item-name {
+            font-weight: 500;
+        }
+        .order-item-mods {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+        .order-item-price {
+            color: #a78bfa;
+            font-weight: 600;
+        }
+        .remove-btn {
+            background: rgba(239, 68, 68, 0.2);
+            border: none;
+            color: #ef4444;
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        .order-total {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 15px;
+            margin-top: 15px;
+            border-top: 2px solid rgba(148, 163, 184, 0.2);
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        
+        .send-order-btn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #a78bfa, #f472b6);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .send-order-btn:hover {
+            transform: translateY(-2px);
+        }
+        .send-order-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Kitchen Display */
+        .kitchen-panel {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            min-height: 200px;
+        }
+        .kitchen-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: #22c55e;
+            font-weight: 600;
+        }
+        .kitchen-ticket {
+            background: white;
+            color: #0f172a;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            animation: ticketPrint 0.5s;
+        }
+        @keyframes ticketPrint {
+            from { opacity: 0; transform: scaleY(0); }
+            to { opacity: 1; transform: scaleY(1); }
+        }
+        .ticket-header {
+            border-bottom: 2px dashed #ccc;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .ticket-item {
+            padding: 5px 0;
+        }
+        .ticket-total {
+            border-top: 2px dashed #ccc;
+            margin-top: 10px;
+            padding-top: 10px;
+            font-weight: bold;
+            text-align: right;
+        }
+        
+        /* Back Link */
+        .back-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .back-link a {
+            color: #a78bfa;
+            text-decoration: none;
+        }
+        
+        /* Noise Indicator */
+        .noise-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(245, 158, 11, 0.1);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #f59e0b;
+        }
+        .noise-bars {
+            display: flex;
+            gap: 2px;
+            align-items: flex-end;
+            height: 20px;
+        }
+        .noise-bar {
+            width: 4px;
+            background: #f59e0b;
+            border-radius: 2px;
+            animation: noise 0.5s infinite;
+        }
+        .noise-bar:nth-child(1) { height: 40%; animation-delay: 0s; }
+        .noise-bar:nth-child(2) { height: 70%; animation-delay: 0.1s; }
+        .noise-bar:nth-child(3) { height: 50%; animation-delay: 0.2s; }
+        .noise-bar:nth-child(4) { height: 80%; animation-delay: 0.3s; }
+        .noise-bar:nth-child(5) { height: 60%; animation-delay: 0.4s; }
+        @keyframes noise {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 Ohana Voice Demo</h1>
+        <p class="subtitle">Offline Voice Ordering for Kitchen Environments</p>
+        
+        <div style="text-align: center;">
+            <span class="environment-badge">
+                🔊 Simulating: Noisy Kitchen Environment | Offline Mode | No Cloud
+            </span>
+        </div>
+        
+        <div class="demo-grid">
+            <!-- Left Panel: Menu & Voice -->
+            <div>
+                <div class="panel">
+                    <h2>🎙️ Voice Input</h2>
+                    <div class="voice-status" id="voiceStatus">
+                        <div class="mic-icon">🎤</div>
+                        <div class="voice-text" id="voiceText">Click a command or menu item</div>
+                    </div>
+                    
+                    <div class="commands">
+                        <button class="command-btn" onclick="simulateVoice('Doble cheese')">"Doble cheese"</button>
+                        <button class="command-btn" onclick="simulateVoice('Con bacon')">"Con bacon"</button>
+                        <button class="command-btn" onclick="simulateVoice('Sin cebolla')">"Sin cebolla"</button>
+                        <button class="command-btn" onclick="simulateVoice('Coca cola grande')">"Coca cola grande"</button>
+                        <button class="command-btn" onclick="sendToKitchen()">"Enviar pedido"</button>
+                    </div>
+                    
+                    <div class="noise-indicator">
+                        <div class="noise-bars">
+                            <div class="noise-bar"></div>
+                            <div class="noise-bar"></div>
+                            <div class="noise-bar"></div>
+                            <div class="noise-bar"></div>
+                            <div class="noise-bar"></div>
+                        </div>
+                        <span>VAD: Filtering kitchen noise (grills, fryers, conversations)</span>
+                    </div>
+                </div>
+                
+                <div class="panel" style="margin-top: 20px;">
+                    <h2>📋 Menu (19 items)</h2>
+                    <div class="menu-grid" id="menuGrid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Panel: Order & Kitchen -->
+            <div>
+                <div class="panel">
+                    <h2>🛒 Current Order</h2>
+                    <div class="order-panel">
+                        <div class="order-header">
+                            <span class="order-title">Order #<span id="orderNumber">042</span></span>
+                            <span class="order-count" id="itemCount">0 items</span>
+                        </div>
+                        <div class="order-items" id="orderItems">
+                            <p style="color: #64748b; text-align: center; padding: 20px;">No items yet. Use voice commands or click menu items.</p>
+                        </div>
+                        <div class="order-total">
+                            <span>Total:</span>
+                            <span id="orderTotal">€0.00</span>
+                        </div>
+                    </div>
+                    <button class="send-order-btn" id="sendBtn" onclick="sendToKitchen()" disabled>
+                        Send to Kitchen
+                    </button>
+                </div>
+                
+                <div class="panel kitchen-panel" id="kitchenPanel" style="display: none;">
+                    <div class="kitchen-header">
+                        <span>🖨️</span>
+                        <span>Kitchen Display - Order Received</span>
+                    </div>
+                    <div id="kitchenTicket"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="back-link">
+            <a href="index.html">← Back to Portfolio</a>
+        </div>
+    </div>
+    
+    <script>
+        const menuItems = [
+            { id: 1, name: 'Doble Cheese', price: 8.50, icon: '🍔' },
+            { id: 2, name: 'Classic Burger', price: 7.90, icon: '🍔' },
+            { id: 3, name: 'BBQ Bacon', price: 9.20, icon: '🥓' },
+            { id: 4, name: 'Chicken Crispy', price: 8.90, icon: '🍗' },
+            { id: 5, name: 'Veggie Deluxe', price: 8.50, icon: '🥬' },
+            { id: 6, name: 'Fries Small', price: 2.50, icon: '🍟' },
+            { id: 7, name: 'Fries Large', price: 3.50, icon: '🍟' },
+            { id: 8, name: 'Onion Rings', price: 3.20, icon: '🧅' },
+            { id: 9, name: 'Nuggets (6)', price: 4.50, icon: '🍗' },
+            { id: 10, name: 'Coca-Cola S', price: 2.00, icon: '🥤' },
+            { id: 11, name: 'Coca-Cola L', price: 2.80, icon: '🥤' },
+            { id: 12, name: 'Fanta Naranja', price: 2.50, icon: '🥤' },
+            { id: 13, name: 'Sprite', price: 2.50, icon: '🥤' },
+            { id: 14, name: 'Agua', price: 1.50, icon: '💧' },
+            { id: 15, name: 'Café', price: 1.80, icon: '☕' },
+            { id: 16, name: 'McFlurry Oreo', price: 3.50, icon: '🍦' },
+            { id: 17, name: 'Apple Pie', price: 2.80, icon: '🥧' },
+            { id: 18, name: 'Sundae', price: 2.50, icon: '🍨' },
+            { id: 19, name: 'Hash Browns', price: 2.20, icon: '🥔' }
+        ];
+        
+        let order = [];
+        let currentMods = [];
+        
+        // Render menu
+        function renderMenu() {
+            const grid = document.getElementById('menuGrid');
+            grid.innerHTML = menuItems.map(item => `
+                <div class="menu-item" onclick="addToOrder(${item.id})">
+                    <div class="item-icon">${item.icon}</div>
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-price">€${item.price.toFixed(2)}</div>
+                </div>
+            `).join('');
+        }
+        
+        async function simulateVoice(text) {
+            const status = document.getElementById('voiceStatus');
+            const voiceText = document.getElementById('voiceText');
+            
+            // Listening state
+            status.classList.add('listening');
+            voiceText.textContent = 'Listening...';
+            await sleep(800);
+            
+            // Detected
+            status.classList.remove('listening');
+            status.classList.add('detected');
+            voiceText.textContent = `Detected: "${text}"`;
+            
+            // Process command
+            await processCommand(text);
+            
+            await sleep(1500);
+            status.classList.remove('detected');
+            voiceText.textContent = 'Ready for next command...';
+        }
+        
+        async function processCommand(text) {
+            const lower = text.toLowerCase();
+            
+            if (lower.includes('doble cheese')) {
+                addToOrder(1);
+            } else if (lower.includes('classic')) {
+                addToOrder(2);
+            } else if (lower.includes('bbq') || lower.includes('bacon')) {
+                if (order.length > 0) {
+                    currentMods.push('+Bacon');
+                    updateOrderDisplay();
+                    await sleep(300);
+                } else {
+                    addToOrder(3);
+                }
+            } else if (lower.includes('cebolla')) {
+                currentMods.push('-Onion');
+                updateOrderDisplay();
+            } else if (lower.includes('coca cola grande')) {
+                addToOrder(11);
+            } else if (lower.includes('enviar')) {
+                sendToKitchen();
+            }
+        }
+        
+        function addToOrder(itemId) {
+            const item = menuItems.find(i => i.id === itemId);
+            const orderItem = {
+                ...item,
+                mods: [...currentMods],
+                uniqueId: Date.now()
+            };
+            order.push(orderItem);
+            currentMods = [];
+            updateOrderDisplay();
+        }
+        
+        function removeFromOrder(uniqueId) {
+            order = order.filter(item => item.uniqueId !== uniqueId);
+            updateOrderDisplay();
+        }
+        
+        function updateOrderDisplay() {
+            const container = document.getElementById('orderItems');
+            const countEl = document.getElementById('itemCount');
+            const totalEl = document.getElementById('orderTotal');
+            const sendBtn = document.getElementById('sendBtn');
+            
+            if (order.length === 0) {
+                container.innerHTML = '<p style="color: #64748b; text-align: center; padding: 20px;">No items yet. Use voice commands or click menu items.</p>';
+                countEl.textContent = '0 items';
+                totalEl.textContent = '€0.00';
+                sendBtn.disabled = true;
+                return;
+            }
+            
+            container.innerHTML = order.map(item => `
+                <div class="order-item">
+                    <div class="order-item-info">
+                        <div class="order-item-name">${item.icon} ${item.name}</div>
+                        ${item.mods.length ? `<div class="order-item-mods">${item.mods.join(', ')}</div>` : ''}
+                    </div>
+                    <span class="order-item-price">€${item.price.toFixed(2)}</span>
+                    <button class="remove-btn" onclick="removeFromOrder(${item.uniqueId})">×</button>
+                </div>
+            `).join('');
+            
+            countEl.textContent = `${order.length} item${order.length !== 1 ? 's' : ''}`;
+            const total = order.reduce((sum, item) => sum + item.price, 0);
+            totalEl.textContent = `€${total.toFixed(2)}`;
+            sendBtn.disabled = false;
+        }
+        
+        async function sendToKitchen() {
+            if (order.length === 0) return;
+            
+            const btn = document.getElementById('sendBtn');
+            btn.textContent = 'Sending...';
+            await sleep(800);
+            
+            // Show kitchen panel
+            const kitchenPanel = document.getElementById('kitchenPanel');
+            const kitchenTicket = document.getElementById('kitchenTicket');
+            
+            const total = order.reduce((sum, item) => sum + item.price, 0);
+            const orderNum = document.getElementById('orderNumber').textContent;
+            
+            kitchenTicket.innerHTML = `
+                <div class="kitchen-ticket">
+                    <div class="ticket-header">
+                        🍔 OHANA KITCHEN<br>
+                        Order #${orderNum}<br>
+                        ${new Date().toLocaleTimeString()}
+                    </div>
+                    ${order.map(item => `
+                        <div class="ticket-item">
+                            1x ${item.name}<br>
+                            ${item.mods.length ? `   ${item.mods.join(' ')}` : ''}
+                        </div>
+                    `).join('')}
+                    <div class="ticket-total">
+                        TOTAL: €${total.toFixed(2)}
+                    </div>
+                </div>
+            `;
+            
+            kitchenPanel.style.display = 'block';
+            
+            // Reset order
+            order = [];
+            updateOrderDisplay();
+            btn.textContent = 'Send to Kitchen';
+            btn.disabled = true;
+            
+            // Increment order number
+            document.getElementById('orderNumber').textContent = String(parseInt(orderNum) + 1).padStart(3, '0');
+        }
+        
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+        
+        // Initialize
+        renderMenu();
+    </script>
+</body>
+</html>

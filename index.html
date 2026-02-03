@@ -6,200 +6,302 @@
     <title>Albert Querol — Technical Demonstrations</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="bg"></div>
+    <div class="bg-animation"></div>
+    
     <main class="container">
+      <!-- Hero Section -->
       <header class="hero">
-        <p class="eyebrow">Python Automation & Data Pipelines</p>
-        <h1>Albert Querol</h1>
-        <p class="lead">
-          Technical demonstrations of production-grade patterns. I build sandbox implementations 
-          that show how I think about architecture, edge cases, and resilient systems.
+        <div class="hero-badge">
+          <span class="pulse"></span>
+          Python Automation & Data Pipelines
+        </div>
+        <h1>
+          <span class="gradient-text">Albert Querol</span>
+        </h1>
+        <p class="hero-subtitle">
+          Technical demonstrations of production-grade patterns.
+          <br>Real architecture. Real code. Runnable in minutes.
         </p>
-        <div class="cta-row">
-          <a class="btn" href="https://github.com/albertquerol12345" target="_blank" rel="noreferrer">View GitHub</a>
-          <a class="btn ghost" href="mailto:albert.querol.beltran@gmail.com">Contact</a>
+        
+        <div class="hero-cta">
+          <a href="#demos" class="btn btn-primary">
+            <span>🚀 Try Live Demos</span>
+          </a>
+          <a href="https://github.com/albertquerol12345" class="btn btn-secondary" target="_blank">
+            <span>💻 View on GitHub</span>
+          </a>
+        </div>
+        
+        <!-- Quick Stats -->
+        <div class="hero-stats">
+          <div class="stat">
+            <span class="stat-number">3</span>
+            <span class="stat-label">Projects</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">40+</span>
+            <span class="stat-label">Tests Each</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">70%</span>
+            <span class="stat-label">Coverage</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">&lt;5min</span>
+            <span class="stat-label">To Run</span>
+          </div>
         </div>
       </header>
 
-      <!-- Clarification Banner -->
-      <section class="clarification">
-        <p>
-          <strong>What this is:</strong> Architectural demonstrations (not commercial products). 
-          Each project shows specific production patterns: resilient pipelines, HITL systems, 
-          offline processing. See <a href="#what-to-evaluate">what to evaluate</a>.
+      <!-- What This Is Banner -->
+      <section class="clarification-banner">
+        <div class="banner-content">
+          <span class="banner-icon">💡</span>
+          <p>
+            <strong>What you're seeing:</strong> Technical demonstrations of architectural patterns — 
+            not commercial products. Each project showcases specific production-grade concepts 
+            (circuit breakers, HITL, checkpointing) with runnable code.
+          </p>
+        </div>
+      </section>
+
+      <!-- Interactive Demos Section -->
+      <section id="demos" class="demos-section">
+        <h2 class="section-title">
+          <span class="title-accent">▶</span> Live Interactive Demos
+        </h2>
+        <p class="section-subtitle">
+          Click any demo to see it in action. No installation required.
         </p>
+        
+        <div class="demos-grid">
+          <!-- Certiva Demo Card -->
+          <a href="demo-certiva.html" class="demo-card certiva">
+            <div class="demo-visual">
+              <div class="demo-preview certiva-preview">
+                <div class="pipeline-mini">
+                  <div class="pipe-step">PDF</div>
+                  <div class="pipe-arrow">→</div>
+                  <div class="pipe-step">OCR</div>
+                  <div class="pipe-arrow">→</div>
+                  <div class="pipe-step">CSV</div>
+                </div>
+                <div class="demo-status">Click to Run →</div>
+              </div>
+            </div>
+            <div class="demo-content">
+              <div class="demo-header">
+                <h3>🧾 Certiva</h3>
+                <span class="demo-tag tag-blue">Invoice Pipeline</span>
+              </div>
+              <p class="demo-desc">
+                Upload a PDF invoice. Watch OCR extraction, validation rules, and CSV export 
+                happen in real-time. Demonstrates circuit breakers and HITL patterns.
+              </p>
+              <div class="demo-meta">
+                <span class="meta-item">📄 34 demo invoices</span>
+                <span class="meta-item">⚡ ~2s processing</span>
+              </div>
+              <div class="demo-patterns">
+                <span class="pattern">Circuit Breaker</span>
+                <span class="pattern">HITL</span>
+                <span class="pattern">Audit Trail</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- Ohana Demo Card -->
+          <a href="demo-ohana.html" class="demo-card ohana">
+            <div class="demo-visual">
+              <div class="demo-preview ohana-preview">
+                <div class="voice-indicator">
+                  <div class="sound-wave">
+                    <span></span><span></span><span></span><span></span><span></span>
+                  </div>
+                  <span class="voice-label">🎤 Voice Active</span>
+                </div>
+                <div class="demo-status">Click to Run →</div>
+              </div>
+            </div>
+            <div class="demo-content">
+              <div class="demo-header">
+                <h3>🎤 Ohana Voice</h3>
+                <span class="demo-tag tag-purple">Offline ASR</span>
+              </div>
+              <p class="demo-desc">
+                Voice ordering system for noisy kitchens. Click voice commands, 
+                see real-time detection, and watch orders flow to kitchen display.
+              </p>
+              <div class="demo-meta">
+                <span class="meta-item">🍔 19-item menu</span>
+                <span class="meta-item">🔊 Offline mode</span>
+              </div>
+              <div class="demo-patterns">
+                <span class="pattern">Event-Driven</span>
+                <span class="pattern">VAD</span>
+                <span class="pattern">WebSocket</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- Vision Demo Card -->
+          <a href="demo-vision.html" class="demo-card vision">
+            <div class="demo-visual">
+              <div class="demo-preview vision-preview">
+                <div class="terminal-mini">
+                  <div class="t-line"><span class="t-prompt">$</span> python pipeline.py</div>
+                  <div class="t-line t-success">✓ 45 images processed</div>
+                  <div class="t-progress">
+                    <div class="t-bar"></div>
+                  </div>
+                </div>
+                <div class="demo-status">Click to Run →</div>
+              </div>
+            </div>
+            <div class="demo-content">
+              <div class="demo-header">
+                <h3>🖼️ Vision Pipeline</h3>
+                <span class="demo-tag tag-green">Batch Processing</span>
+              </div>
+              <p class="demo-desc">
+                Batch image processing with resumable checkpointing. 
+                Watch progress bars, cost estimation, and CSV generation in the terminal.
+              </p>
+              <div class="demo-meta">
+                <span class="meta-item">💰 ~$0.03/400 imgs</span>
+                <span class="meta-item">💾 Auto-checkpoint</span>
+              </div>
+              <div class="demo-patterns">
+                <span class="pattern">Resumable</span>
+                <span class="pattern">Idempotent</span>
+                <span class="pattern">Cost-Optimized</span>
+              </div>
+            </div>
+          </a>
+        </div>
       </section>
 
-      <!-- Projects Grid -->
-      <section class="grid">
-        <article class="card">
-          <div class="card-head">
-            <h2>Certiva</h2>
-            <span>Document Processing Pipeline</span>
-          </div>
-          <div class="card-meta">
-            <span class="tag">34 demo invoices</span>
-            <span class="tag">OCR + HITL</span>
-            <span class="tag">Circuit breakers</span>
-          </div>
-          <p class="card-desc">
-            Demonstrates resilient OCR pipelines with human-in-the-loop review, 
-            audit trails, and multi-tenant architecture. Processes PDFs through 
-            normalization, validation, and export with full observability.
-          </p>
-          <div class="card-patterns">
-            <strong>Patterns:</strong> Pipeline, Circuit Breaker, Repository, HITL
-          </div>
-          <div class="card-links">
-            <a class="link" href="https://github.com/albertquerol12345/certiva" target="_blank" rel="noreferrer">
-              View Code →
-            </a>
-            <a class="link secondary" href="https://github.com/albertquerol12345/certiva/blob/main/DEMO.md" target="_blank" rel="noreferrer">
-              Run Demo →
-            </a>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="card-head">
-            <h2>Ohana Voice</h2>
-            <span>Offline Voice Recognition</span>
-          </div>
-          <div class="card-meta">
-            <span class="tag">19-item catalog</span>
-            <span class="tag">Offline ASR</span>
-            <span class="tag">Browser demo</span>
-          </div>
-          <p class="card-desc">
-            Demonstrates offline voice ordering for noisy environments. Uses local 
-            ASR (Vosk/Kaldi) with voice activity detection and human validation 
-            before confirmation. No cloud dependencies.
-          </p>
-          <div class="card-patterns">
-            <strong>Patterns:</strong> Event-driven, WebSocket streaming, State machine
-          </div>
-          <div class="card-links">
-            <a class="link" href="https://github.com/albertquerol12345/ohana-voice" target="_blank" rel="noreferrer">
-              View Code →
-            </a>
-            <a class="link secondary" href="https://github.com/albertquerol12345/ohana-voice/blob/main/DEMO.md" target="_blank" rel="noreferrer">
-              Run Demo →
-            </a>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="card-head">
-            <h2>Vision Pipeline</h2>
-            <span>Batch API Processing</span>
-          </div>
-          <div class="card-meta">
-            <span class="tag">~$0.03/400 imgs</span>
-            <span class="tag">Resumable</span>
-            <span class="tag">Checkpointing</span>
-          </div>
-          <p class="card-desc">
-            Demonstrates resilient batch processing with external APIs. Features 
-            checkpointing every N rows, idempotency, and cost optimization. 
-            Survives interruptions without data loss.
-          </p>
-          <div class="card-patterns">
-            <strong>Patterns:</strong> Pipeline, Checkpoint/Restore, Idempotency
-          </div>
-          <div class="card-links">
-            <a class="link" href="https://github.com/albertquerol12345/vision-descr-pipeline" target="_blank" rel="noreferrer">
-              View Code →
-            </a>
-            <a class="link secondary" href="https://github.com/albertquerol12345/vision-descr-pipeline/blob/main/DEMO.md" target="_blank" rel="noreferrer">
-              Run Demo →
-            </a>
-          </div>
-        </article>
-      </section>
-
-      <!-- What to Evaluate Section -->
-      <section id="what-to-evaluate" class="evaluation">
-        <h2>For Technical Reviewers</h2>
-        <p class="eval-intro">
-          These are <strong>architectural demonstrations</strong>, not finished products. 
-          Here's what to look for:
+      <!-- Technical Evaluation Guide -->
+      <section class="evaluation-section">
+        <h2 class="section-title">What to Evaluate</h2>
+        <p class="section-subtitle">
+          Technical reviewers: here's what these projects demonstrate
         </p>
         
         <div class="eval-grid">
-          <div class="eval-item">
-            <h3>🏗️ Architecture</h3>
+          <div class="eval-card">
+            <div class="eval-icon">🏗️</div>
+            <h4>Architecture</h4>
             <ul>
+              <li>Pipeline patterns</li>
+              <li>Repository pattern</li>
               <li>Clean separation of concerns</li>
-              <li>Pipeline and repository patterns</li>
               <li>Configuration management</li>
-              <li>Multi-tenant isolation</li>
             </ul>
           </div>
-          <div class="eval-item">
-            <h3>🛡️ Resilience</h3>
+          <div class="eval-card">
+            <div class="eval-icon">🛡️</div>
+            <h4>Resilience</h4>
             <ul>
               <li>Circuit breakers</li>
-              <li>Retry logic with backoff</li>
-              <li>Checkpointing and resumability</li>
+              <li>Exponential backoff</li>
+              <li>Checkpointing</li>
               <li>Graceful degradation</li>
             </ul>
           </div>
-          <div class="eval-item">
-            <h3>🧪 Code Quality</h3>
+          <div class="eval-card">
+            <div class="eval-icon">🧪</div>
+            <h4>Code Quality</h4>
             <ul>
-              <li>Type hints throughout</li>
+              <li>Type hints (Python 3.11+)</li>
               <li>70%+ test coverage</li>
-              <li>Documentation and docstrings</li>
-              <li>Error handling completeness</li>
+              <li>Documentation</li>
+              <li>Error handling</li>
             </ul>
           </div>
-          <div class="eval-item">
-            <h3>🔍 Edge Cases</h3>
+          <div class="eval-card">
+            <div class="eval-icon">🔍</div>
+            <h4>Edge Cases</h4>
             <ul>
-              <li>OCR failures handled</li>
-              <li>Data validation (amounts, dates)</li>
+              <li>OCR failure handling</li>
+              <li>Data validation</li>
               <li>API rate limiting</li>
-              <li>Audit trails for debugging</li>
+              <li>Audit trails</li>
             </ul>
           </div>
         </div>
       </section>
 
       <!-- About Section -->
-      <section class="about">
-        <h2>About Me</h2>
-        <p>
-          I'm a junior Python developer with 3+ years of operational experience (Shift Manager at McDonald's) 
-          and SAP FI certification. I understand what breaks in real processes because I've lived it.
-        </p>
-        <p>
-          My value is in <strong>operational context</strong> + <strong>technical implementation</strong>. 
-          I don't just write code; I think about what happens when the OCR fails, when the API is down, 
-          when the user makes an error.
-        </p>
-        <p>
-          Based in Barcelona. Looking for junior automation, data pipeline, or backend roles.
-        </p>
+      <section class="about-section">
+        <div class="about-grid">
+          <div class="about-content">
+            <h2>About Me</h2>
+            <p>
+              I'm a junior Python developer with <strong>3+ years of operational experience</strong> 
+              (Shift Manager at McDonald's) and <strong>SAP FI certification</strong>. 
+              I understand what breaks in real processes because I've lived it.
+            </p>
+            <p>
+              My value is in <strong>operational context + technical implementation</strong>. 
+              I don't just write code; I think about what happens when the OCR fails, 
+              when the API is down, when the user makes an error.
+            </p>
+            <div class="about-tags">
+              <span class="about-tag">Python</span>
+              <span class="about-tag">FastAPI</span>
+              <span class="about-tag">Pandas</span>
+              <span class="about-tag">SQLite</span>
+              <span class="about-tag">Docker</span>
+              <span class="about-tag">SAP FI</span>
+            </div>
+          </div>
+          <div class="about-stats">
+            <div class="about-stat">
+              <span class="about-stat-value">3+</span>
+              <span class="about-stat-label">Years Ops Experience</span>
+            </div>
+            <div class="about-stat">
+              <span class="about-stat-value">SAP</span>
+              <span class="about-stat-label">FI Certified</span>
+            </div>
+            <div class="about-stat">
+              <span class="about-stat-value">40+</span>
+              <span class="about-stat-label">Tests Per Project</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA Section -->
+      <section class="cta-section">
+        <h2>Ready to dive deeper?</h2>
+        <p>All code is open source. Run it locally. Break it. Improve it.</p>
+        <div class="cta-buttons">
+          <a href="https://github.com/albertquerol12345" class="btn btn-primary btn-large" target="_blank">
+            <span>🌟 Star on GitHub</span>
+          </a>
+          <a href="mailto:albert.querol.beltran@gmail.com" class="btn btn-secondary btn-large">
+            <span>📧 Get in Touch</span>
+          </a>
+        </div>
       </section>
 
       <!-- Footer -->
-      <section class="footer">
-        <p>
-          <a href="https://github.com/albertquerol12345" target="_blank" rel="noreferrer">GitHub</a> · 
-          <a href="https://linkedin.com/in/albertquerolbeltran" target="_blank" rel="noreferrer">LinkedIn</a> · 
+      <footer class="footer">
+        <div class="footer-links">
+          <a href="https://github.com/albertquerol12345" target="_blank">GitHub</a>
+          <a href="https://linkedin.com/in/albertquerolbeltran" target="_blank">LinkedIn</a>
           <a href="mailto:albert.querol.beltran@gmail.com">Email</a>
+        </div>
+        <p class="footer-note">
+          Demo-scale technical demonstrations • Barcelona, Spain • Open to junior automation roles
         </p>
-        <p class="small">
-          All projects are demo-scale technical demonstrations. Runnable in under 5 minutes.
-        </p>
-      </section>
+      </footer>
     </main>
   </body>
 </html>

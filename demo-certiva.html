@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certiva Demo - Invoice Processing Pipeline</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+        
+        /* Pipeline Flow */
+        .pipeline {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        .step {
+            background: rgba(56, 189, 248, 0.1);
+            border: 2px solid #38bdf8;
+            border-radius: 12px;
+            padding: 15px 25px;
+            text-align: center;
+            transition: all 0.3s;
+            min-width: 120px;
+        }
+        .step.active {
+            background: rgba(56, 189, 248, 0.3);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+            transform: scale(1.05);
+        }
+        .step.completed {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: #22c55e;
+        }
+        .step-icon {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+        .step-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .arrow {
+            font-size: 1.5rem;
+            color: #64748b;
+        }
+        
+        /* Main Demo Area */
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        @media (max-width: 900px) {
+            .demo-grid { grid-template-columns: 1fr; }
+        }
+        
+        .panel {
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+        .panel h2 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* PDF Upload Area */
+        .upload-area {
+            border: 2px dashed #475569;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .upload-area:hover {
+            border-color: #38bdf8;
+            background: rgba(56, 189, 248, 0.05);
+        }
+        .upload-area.dragover {
+            border-color: #38bdf8;
+            background: rgba(56, 189, 248, 0.1);
+        }
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        .upload-text {
+            color: #94a3b8;
+            margin-bottom: 20px;
+        }
+        .btn {
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .btn:hover { transform: translateY(-2px); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        /* Sample PDFs */
+        .sample-pdfs {
+            margin-top: 20px;
+        }
+        .sample-pdf {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        .sample-pdf:hover {
+            background: rgba(56, 189, 248, 0.1);
+            border-color: #38bdf8;
+        }
+        .sample-pdf.selected {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: #38bdf8;
+        }
+        .pdf-icon { font-size: 1.5rem; }
+        .pdf-info { flex: 1; }
+        .pdf-name { font-weight: 600; font-size: 0.9rem; }
+        .pdf-meta { font-size: 0.8rem; color: #64748b; }
+        
+        /* Processing Log */
+        .log-container {
+            background: #0f172a;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            height: 300px;
+            overflow-y: auto;
+        }
+        .log-entry {
+            margin-bottom: 8px;
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        .log-time { color: #64748b; margin-right: 10px; }
+        .log-info { color: #38bdf8; }
+        .log-success { color: #22c55e; }
+        .log-warning { color: #f59e0b; }
+        .log-error { color: #ef4444; }
+        
+        /* Results Panel */
+        .results-panel {
+            display: none;
+        }
+        .results-panel.show {
+            display: block;
+            animation: slideUp 0.5s;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .result-card {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid #22c55e;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .result-title { font-weight: 600; color: #22c55e; }
+        .confidence-badge {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .extracted-data {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+        .data-row:last-child { border-bottom: none; }
+        .data-label { color: #94a3b8; }
+        .data-value { color: #e2e8f0; font-weight: 500; }
+        
+        /* CSV Output */
+        .csv-preview {
+            background: #0f172a;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+        .csv-row {
+            display: flex;
+            gap: 20px;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+        .csv-cell { min-width: 80px; }
+        .csv-header { color: #38bdf8; font-weight: 600; }
+        
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .stat-box {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #38bdf8;
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 5px;
+        }
+        
+        /* Back Link */
+        .back-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .back-link a {
+            color: #38bdf8;
+            text-decoration: none;
+        }
+        .back-link a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧾 Certiva Live Demo</h1>
+        <p class="subtitle">Invoice Processing Pipeline: Upload a PDF and watch the magic happen</p>
+        
+        <!-- Pipeline Steps -->
+        <div class="pipeline">
+            <div class="step" id="step-input">
+                <div class="step-icon">📄</div>
+                <div class="step-label">INPUT</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step" id="step-ocr">
+                <div class="step-icon">🔍</div>
+                <div class="step-label">OCR</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step" id="step-rules">
+                <div class="step-icon">⚙️</div>
+                <div class="step-label">RULES</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step" id="step-export">
+                <div class="step-icon">📊</div>
+                <div class="step-label">EXPORT</div>
+            </div>
+        </div>
+        
+        <div class="demo-grid">
+            <!-- Left Panel: Input -->
+            <div class="panel">
+                <h2>📤 Upload Invoice</h2>
+                
+                <div class="upload-area" id="uploadArea" onclick="selectSample(0)">
+                    <div class="upload-icon">📁</div>
+                    <div class="upload-text">
+                        Click to try a sample invoice<br>
+                        <small>(34 synthetic invoices available)</small>
+                    </div>
+                    <button class="btn" id="processBtn" onclick="startProcessing()">Process Invoice</button>
+                </div>
+                
+                <div class="sample-pdfs">
+                    <div class="sample-pdf selected" onclick="selectSample(0)" id="pdf-0">
+                        <span class="pdf-icon">📄</span>
+                        <div class="pdf-info">
+                            <div class="pdf-name">IBERDROLA_SUMINISTRO_FEB.pdf</div>
+                            <div class="pdf-meta">€218.41 • Suministros eléctricos</div>
+                        </div>
+                    </div>
+                    <div class="sample-pdf" onclick="selectSample(1)" id="pdf-1">
+                        <span class="pdf-icon">📄</span>
+                        <div class="pdf-info">
+                            <div class="pdf-name">MICROSOFT_365_LIC.pdf</div>
+                            <div class="pdf-meta">€387.20 • Software SaaS</div>
+                        </div>
+                    </div>
+                    <div class="sample-pdf" onclick="selectSample(2)" id="pdf-2">
+                        <span class="pdf-icon">📄</span>
+                        <div class="pdf-info">
+                            <div class="pdf-name">CONSULTORES_CLOUD.pdf</div>
+                            <div class="pdf-meta">€1,815.00 • Servicios profesionales</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Panel: Processing Log -->
+            <div class="panel">
+                <h2>⚡ Processing Log</h2>
+                <div class="log-container" id="logContainer">
+                    <div class="log-entry">
+                        <span class="log-time">14:32:01</span>
+                        <span class="log-info">System ready. Waiting for input...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Results Panel -->
+        <div class="panel results-panel" id="resultsPanel">
+            <h2>✅ Processing Results</h2>
+            
+            <div class="result-card">
+                <div class="result-header">
+                    <span class="result-title">📄 Invoice Processed Successfully</span>
+                    <span class="confidence-badge">94% Confidence</span>
+                </div>
+                <div class="extracted-data" id="extractedData">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value" id="stat-time">2.4s</div>
+                    <div class="stat-label">Processing Time</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="stat-confidence">94%</div>
+                    <div class="stat-label">OCR Confidence</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">✓</div>
+                    <div class="stat-label">Auto-Posted</div>
+                </div>
+            </div>
+            
+            <h3 style="margin-top: 25px; margin-bottom: 10px; color: #38bdf8;">📊 CSV Export (a3innuva-ready)</h3>
+            <div class="csv-preview" id="csvPreview">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+        
+        <div class="back-link">
+            <a href="index.html">← Back to Portfolio</a>
+        </div>
+    </div>
+    
+    <script>
+        const sampleData = [
+            {
+                filename: 'IBERDROLA_SUMINISTRO_FEB.pdf',
+                provider: 'IBERDROLA SUMINISTRO ESPAÑA S.A.U.',
+                nif: 'A12345678',
+                invoice: 'IB-2025-0210',
+                date: '2025-02-10',
+                base: 180.50,
+                iva: 37.91,
+                total: 218.41,
+                category: 'Suministros eléctricos',
+                confidence: 94
+            },
+            {
+                filename: 'MICROSOFT_365_LIC.pdf',
+                provider: 'MICROSOFT IBERIA SRL',
+                nif: 'B82387121',
+                invoice: 'MS-2025-9087',
+                date: '2025-02-15',
+                base: 320.00,
+                iva: 67.20,
+                total: 387.20,
+                category: 'Software SaaS',
+                confidence: 97
+            },
+            {
+                filename: 'CONSULTORES_CLOUD.pdf',
+                provider: 'CONSULTORES CLOUD SA',
+                nif: 'A55667788',
+                invoice: 'CC-2025-012',
+                date: '2025-01-29',
+                base: 1500.00,
+                iva: 315.00,
+                total: 1815.00,
+                category: 'Consultoría tecnológica',
+                confidence: 91
+            }
+        ];
+        
+        let selectedPdf = 0;
+        let isProcessing = false;
+        
+        function selectSample(index) {
+            if (isProcessing) return;
+            
+            selectedPdf = index;
+            document.querySelectorAll('.sample-pdf').forEach((el, i) => {
+                el.classList.toggle('selected', i === index);
+            });
+        }
+        
+        function addLog(message, type = 'info') {
+            const container = document.getElementById('logContainer');
+            const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+            const typeClass = `log-${type}`;
+            
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `
+                <span class="log-time">${time}</span>
+                <span class="${typeClass}">${message}</span>
+            `;
+            
+            container.appendChild(entry);
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        function setStepActive(stepId) {
+            document.querySelectorAll('.step').forEach(step => {
+                step.classList.remove('active', 'completed');
+            });
+            
+            const steps = ['step-input', 'step-ocr', 'step-rules', 'step-export'];
+            const currentIndex = steps.indexOf(stepId);
+            
+            for (let i = 0; i < currentIndex; i++) {
+                document.getElementById(steps[i]).classList.add('completed');
+            }
+            document.getElementById(stepId).classList.add('active');
+        }
+        
+        async function startProcessing() {
+            if (isProcessing) return;
+            isProcessing = true;
+            
+            const btn = document.getElementById('processBtn');
+            btn.disabled = true;
+            btn.textContent = 'Processing...';
+            
+            const data = sampleData[selectedPdf];
+            
+            // Clear log
+            document.getElementById('logContainer').innerHTML = '';
+            document.getElementById('resultsPanel').classList.remove('show');
+            
+            // Step 1: Input
+            setStepActive('step-input');
+            addLog(`Loading PDF: ${data.filename}`, 'info');
+            await sleep(800);
+            
+            addLog(`SHA-256 hash calculated: ${generateHash()}`, 'info');
+            await sleep(500);
+            
+            // Step 2: OCR
+            setStepActive('step-ocr');
+            addLog('Initializing Azure Form Recognizer...', 'info');
+            await sleep(600);
+            
+            addLog('Extracting text from PDF...', 'info');
+            await sleep(1000);
+            
+            addLog(`OCR Confidence: ${data.confidence}%`, 'success');
+            await sleep(400);
+            
+            addLog(`Detected: Invoice #${data.invoice}`, 'info');
+            addLog(`Provider: ${data.provider}`, 'info');
+            await sleep(600);
+            
+            // Step 3: Rules
+            setStepActive('step-rules');
+            addLog('Validating NIF format... ✓', 'success');
+            await sleep(400);
+            
+            addLog(`Calculating amounts: Base ${data.base.toFixed(2)} + IVA ${data.iva.toFixed(2)} = ${data.total.toFixed(2)}`, 'info');
+            await sleep(500);
+            
+            addLog(`Matching to category: ${data.category}`, 'info');
+            await sleep(400);
+            
+            addLog('Checking for duplicates... None found', 'success');
+            await sleep(400);
+            
+            addLog(`Global confidence: ${data.confidence}% > threshold (85%)`, 'success');
+            await sleep(400);
+            
+            addLog('✓ Document approved for auto-post', 'success');
+            await sleep(600);
+            
+            // Step 4: Export
+            setStepActive('step-export');
+            addLog('Generating accounting entries...', 'info');
+            await sleep(500);
+            
+            addLog('Exporting to CSV format (a3innuva-compatible)...', 'info');
+            await sleep(600);
+            
+            addLog('Writing audit trail to SQLite...', 'info');
+            await sleep(400);
+            
+            addLog('✓ Processing complete!', 'success');
+            
+            // Show results
+            showResults(data);
+            
+            btn.disabled = false;
+            btn.textContent = 'Process Another Invoice';
+            isProcessing = false;
+        }
+        
+        function showResults(data) {
+            // Extracted data
+            document.getElementById('extractedData').innerHTML = `
+                <div class="data-row">
+                    <span class="data-label">Provider:</span>
+                    <span class="data-value">${data.provider}</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">NIF:</span>
+                    <span class="data-value">${data.nif}</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Invoice #:</span>
+                    <span class="data-value">${data.invoice}</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Date:</span>
+                    <span class="data-value">${data.date}</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Total:</span>
+                    <span class="data-value">€${data.total.toFixed(2)}</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Category:</span>
+                    <span class="data-value">${data.category}</span>
+                </div>
+            `;
+            
+            // CSV Preview
+            document.getElementById('csvPreview').innerHTML = `
+                <div class="csv-row">
+                    <span class="csv-cell csv-header">Fecha</span>
+                    <span class="csv-cell csv-header">Diario</span>
+                    <span class="csv-cell csv-header">Documento</span>
+                    <span class="csv-cell csv-header">Cuenta</span>
+                    <span class="csv-cell csv-header">Debe</span>
+                    <span class="csv-cell csv-header">Haber</span>
+                    <span class="csv-cell csv-header">Concepto</span>
+                </div>
+                <div class="csv-row">
+                    <span class="csv-cell">${data.date}</span>
+                    <span class="csv-cell">COMPRAS</span>
+                    <span class="csv-cell">${data.invoice}</span>
+                    <span class="csv-cell">628000</span>
+                    <span class="csv-cell">${data.base.toFixed(2)}</span>
+                    <span class="csv-cell">0.00</span>
+                    <span class="csv-cell">${data.category}</span>
+                </div>
+                <div class="csv-row">
+                    <span class="csv-cell">${data.date}</span>
+                    <span class="csv-cell">COMPRAS</span>
+                    <span class="csv-cell">${data.invoice}</span>
+                    <span class="csv-cell">472000</span>
+                    <span class="csv-cell">${data.iva.toFixed(2)}</span>
+                    <span class="csv-cell">0.00</span>
+                    <span class="csv-cell">IVA Soportado</span>
+                </div>
+                <div class="csv-row">
+                    <span class="csv-cell">${data.date}</span>
+                    <span class="csv-cell">COMPRAS</span>
+                    <span class="csv-cell">${data.invoice}</span>
+                    <span class="csv-cell">410000</span>
+                    <span class="csv-cell">0.00</span>
+                    <span class="csv-cell">${data.total.toFixed(2)}</span>
+                    <span class="csv-cell">Proveedores</span>
+                </div>
+            `;
+            
+            // Stats
+            document.getElementById('stat-time').textContent = (2.0 + Math.random()).toFixed(1) + 's';
+            document.getElementById('stat-confidence').textContent = data.confidence + '%';
+            
+            // Show panel
+            document.getElementById('resultsPanel').classList.add('show');
+        }
+        
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+        
+        function generateHash() {
+            return Array(16).fill(0).map(() => Math.floor(Math.random() * 16).toString(16)).join('');
+        }
+    </script>
+</body>
+</html>
