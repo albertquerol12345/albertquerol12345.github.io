@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ohana Voice Demo - Comandas por Voz</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
             background: linear-gradient(135deg, #1a0f2e 0%, #2d1b4e 100%);
@@ -13,10 +19,12 @@
             min-height: 100vh;
             padding: 20px;
         }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
         }
+
         h1 {
             text-align: center;
             font-size: 2.2rem;
@@ -25,12 +33,13 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         .subtitle {
             text-align: center;
             color: #a78bfa;
             margin-bottom: 20px;
         }
-        
+
         .environment-badge {
             display: inline-flex;
             align-items: center;
@@ -42,28 +51,32 @@
             font-size: 0.85rem;
             margin-bottom: 20px;
         }
-        
+
         .demo-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 24px;
         }
+
         @media (max-width: 900px) {
-            .demo-grid { grid-template-columns: 1fr; }
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
         }
-        
+
         .panel {
             background: rgba(45, 27, 78, 0.8);
             border-radius: 16px;
             padding: 24px;
             border: 1px solid rgba(167, 139, 250, 0.2);
         }
+
         .panel h2 {
             font-size: 1.1rem;
             margin-bottom: 16px;
             color: #a78bfa;
         }
-        
+
         /* Voice Status */
         .voice-status {
             background: rgba(15, 23, 42, 0.8);
@@ -74,31 +87,44 @@
             border: 2px solid transparent;
             transition: all 0.3s;
         }
+
         .voice-status.listening {
             border-color: #a78bfa;
             box-shadow: 0 0 30px rgba(167, 139, 250, 0.3);
         }
+
         .mic-icon {
             font-size: 2.5rem;
             margin-bottom: 10px;
         }
+
         .voice-status.listening .mic-icon {
             animation: pulse 1.5s infinite;
         }
+
         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
         }
+
         .voice-text {
             font-size: 1rem;
             color: #94a3b8;
             min-height: 24px;
         }
+
         .voice-text.active {
             color: #a78bfa;
             font-weight: 600;
         }
-        
+
         /* Command Buttons */
         .commands {
             display: flex;
@@ -107,6 +133,7 @@
             justify-content: center;
             margin-top: 15px;
         }
+
         .command-btn {
             background: rgba(167, 139, 250, 0.2);
             border: 1px solid rgba(167, 139, 250, 0.4);
@@ -117,11 +144,12 @@
             font-size: 0.85rem;
             transition: all 0.2s;
         }
+
         .command-btn:hover {
             background: rgba(167, 139, 250, 0.3);
             transform: translateY(-2px);
         }
-        
+
         /* Menu Grid - Las hamburguesas REALES de Albert */
         .menu-grid {
             display: grid;
@@ -131,6 +159,7 @@
             max-height: 320px;
             overflow-y: auto;
         }
+
         .menu-item {
             background: rgba(15, 23, 42, 0.6);
             border: 2px solid transparent;
@@ -140,24 +169,28 @@
             transition: all 0.2s;
             text-align: center;
         }
+
         .menu-item:hover {
             border-color: #a78bfa;
             background: rgba(167, 139, 250, 0.1);
         }
+
         .item-icon {
             font-size: 1.8rem;
             margin-bottom: 4px;
         }
+
         .item-name {
             font-weight: 600;
             font-size: 0.85rem;
             margin-bottom: 2px;
         }
+
         .item-price {
             color: #a78bfa;
             font-size: 0.8rem;
         }
-        
+
         /* Current Order */
         .order-panel {
             background: rgba(15, 23, 42, 0.6);
@@ -165,6 +198,7 @@
             padding: 20px;
             margin-top: 20px;
         }
+
         .order-header {
             display: flex;
             justify-content: space-between;
@@ -173,10 +207,12 @@
             padding-bottom: 15px;
             border-bottom: 1px solid rgba(148, 163, 184, 0.2);
         }
+
         .order-title {
             font-weight: 600;
             color: #a78bfa;
         }
+
         .order-count {
             background: #a78bfa;
             color: white;
@@ -184,11 +220,13 @@
             border-radius: 20px;
             font-size: 0.8rem;
         }
+
         .order-items {
             min-height: 100px;
             max-height: 200px;
             overflow-y: auto;
         }
+
         .order-item {
             display: flex;
             justify-content: space-between;
@@ -199,23 +237,38 @@
             margin-bottom: 8px;
             animation: slideIn 0.3s;
         }
+
         @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
-        .order-item-info { flex: 1; }
+
+        .order-item-info {
+            flex: 1;
+        }
+
         .order-item-name {
             font-weight: 500;
             font-size: 0.9rem;
         }
+
         .order-item-ingredients {
             font-size: 0.75rem;
             color: #94a3b8;
         }
+
         .order-item-price {
             color: #a78bfa;
             font-weight: 600;
         }
+
         .remove-btn {
             background: rgba(239, 68, 68, 0.2);
             border: none;
@@ -225,6 +278,7 @@
             cursor: pointer;
             margin-left: 10px;
         }
+
         .order-total {
             display: flex;
             justify-content: space-between;
@@ -234,6 +288,7 @@
             font-size: 1.1rem;
             font-weight: 700;
         }
+
         .send-order-btn {
             width: 100%;
             margin-top: 20px;
@@ -247,14 +302,16 @@
             cursor: pointer;
             transition: transform 0.2s;
         }
+
         .send-order-btn:hover:not(:disabled) {
             transform: translateY(-2px);
         }
+
         .send-order-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
-        
+
         /* Kitchen Ticket */
         .kitchen-panel {
             background: #0f172a;
@@ -263,14 +320,24 @@
             margin-top: 20px;
             display: none;
         }
+
         .kitchen-panel.show {
             display: block;
             animation: ticketPrint 0.5s;
         }
+
         @keyframes ticketPrint {
-            from { opacity: 0; transform: scaleY(0); }
-            to { opacity: 1; transform: scaleY(1); }
+            from {
+                opacity: 0;
+                transform: scaleY(0);
+            }
+
+            to {
+                opacity: 1;
+                transform: scaleY(1);
+            }
         }
+
         .kitchen-header {
             display: flex;
             align-items: center;
@@ -279,6 +346,7 @@
             color: #22c55e;
             font-weight: 600;
         }
+
         .kitchen-ticket {
             background: white;
             color: #0f172a;
@@ -286,6 +354,7 @@
             border-radius: 8px;
             font-family: monospace;
         }
+
         .ticket-header {
             border-bottom: 2px dashed #ccc;
             padding-bottom: 10px;
@@ -293,10 +362,12 @@
             text-align: center;
             font-weight: bold;
         }
+
         .ticket-item {
             padding: 5px 0;
             font-size: 0.9rem;
         }
+
         .ticket-total {
             border-top: 2px dashed #ccc;
             margin-top: 10px;
@@ -304,7 +375,7 @@
             font-weight: bold;
             text-align: right;
         }
-        
+
         .noise-indicator {
             display: flex;
             align-items: center;
@@ -316,37 +387,68 @@
             font-size: 0.8rem;
             color: #f59e0b;
         }
+
         .noise-bars {
             display: flex;
             gap: 2px;
             align-items: flex-end;
             height: 20px;
         }
+
         .noise-bar {
             width: 4px;
             background: #f59e0b;
             border-radius: 2px;
             animation: noise 0.5s infinite;
         }
-        .noise-bar:nth-child(1) { height: 40%; animation-delay: 0s; }
-        .noise-bar:nth-child(2) { height: 70%; animation-delay: 0.1s; }
-        .noise-bar:nth-child(3) { height: 50%; animation-delay: 0.2s; }
-        .noise-bar:nth-child(4) { height: 80%; animation-delay: 0.3s; }
-        .noise-bar:nth-child(5) { height: 60%; animation-delay: 0.4s; }
-        @keyframes noise {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
+
+        .noise-bar:nth-child(1) {
+            height: 40%;
+            animation-delay: 0s;
         }
-        
+
+        .noise-bar:nth-child(2) {
+            height: 70%;
+            animation-delay: 0.1s;
+        }
+
+        .noise-bar:nth-child(3) {
+            height: 50%;
+            animation-delay: 0.2s;
+        }
+
+        .noise-bar:nth-child(4) {
+            height: 80%;
+            animation-delay: 0.3s;
+        }
+
+        .noise-bar:nth-child(5) {
+            height: 60%;
+            animation-delay: 0.4s;
+        }
+
+        @keyframes noise {
+
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
         .back-link {
             text-align: center;
             margin-top: 30px;
         }
+
         .back-link a {
             color: #a78bfa;
             text-decoration: none;
         }
-        
+
         .asr-badge {
             display: inline-block;
             background: rgba(34, 197, 94, 0.2);
@@ -358,6 +460,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>🎤 Ohana Voice</h1>
@@ -365,13 +468,32 @@
         <p style="margin: 6px 0 18px; color: #94a3b8; font-size: 0.85rem;">
             ⚠️ Demo UI en navegador. El reconocimiento de voz requiere backend local.
         </p>
-        
+
         <div style="text-align: center;">
             <span class="environment-badge">
                 🔊 Entorno: Cocina con ruido | Vosk/Kaldi Offline | Sin Cloud
             </span>
         </div>
-        
+
+        <!-- TECHNICAL CONTEXT BADGE -->
+        <div
+            style="background: rgba(15, 23, 42, 0.6); border-left: 4px solid #a78bfa; padding: 15px; margin-bottom: 30px; border-radius: 0 8px 8px 0; text-align: left;">
+            <h3 style="color: #a78bfa; font-size: 0.95rem; margin-bottom: 5px;">🔧 Contexto Técnico (Backend vs
+                Frontend)</h3>
+            <p style="color: #cbd5e1; font-size: 0.85rem; line-height: 1.5;">
+                Esta demo es un <strong>mockup visual en JavaScript</strong> para mostrar la UX propuesta.
+                El software de ingeniería real reside en el repositorio (Python) e implementa:
+            <ul style="margin-left: 20px; margin-top: 5px; color: #94a3b8;">
+                <li>Procesamiento de audio offline con <strong>Vosk/Kaldi</strong>.</li>
+                <li>Gramáticas <code>.gram</code> para restringir vocabulario y mejorar precisión.</li>
+                <li>Lógica de negocio desacoplada de la interfaz.</li>
+            </ul>
+            <a href="https://github.com/albertquerol12345/ohana-voice" target="_blank"
+                style="color: #a78bfa; text-decoration: underline; margin-top: 5px; display: inline-block;">Ver código
+                Backend en GitHub →</a>
+            </p>
+        </div>
+
         <div class="demo-grid">
             <!-- Left: Menu -->
             <div>
@@ -381,15 +503,16 @@
                         <div class="mic-icon">🎤</div>
                         <div class="voice-text" id="voiceText">Haz clic en un comando o hamburguesa</div>
                     </div>
-                    
+
                     <div class="commands">
                         <button class="command-btn" onclick="simulateVoice('una Big Ohana')">"una Big Ohana"</button>
-                        <button class="command-btn" onclick="simulateVoice('una Boo con cheddar')">"una Boo con cheddar"</button>
+                        <button class="command-btn" onclick="simulateVoice('una Boo con cheddar')">"una Boo con
+                            cheddar"</button>
                         <button class="command-btn" onclick="simulateVoice('una Wazoski')">"una Wazoski"</button>
                         <button class="command-btn" onclick="simulateVoice('una Vegana')">"una Vegana"</button>
                         <button class="command-btn" onclick="simulateVoice('enviar pedido')">"enviar pedido"</button>
                     </div>
-                    
+
                     <div class="noise-indicator">
                         <div class="noise-bars">
                             <div class="noise-bar"></div>
@@ -401,7 +524,7 @@
                         <span>VAD: Filtrando ruido de cocina (parrillas, freidoras)</span>
                     </div>
                 </div>
-                
+
                 <div class="panel" style="margin-top: 20px;">
                     <h2>🍔 Menú Ohana (19 items)</h2>
                     <div class="menu-grid" id="menuGrid">
@@ -409,7 +532,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Right: Order & Kitchen -->
             <div>
                 <div class="panel">
@@ -433,7 +556,7 @@
                         Enviar a Cocina
                     </button>
                 </div>
-                
+
                 <div class="panel kitchen-panel" id="kitchenPanel">
                     <div class="kitchen-header">
                         <span>🖨️</span>
@@ -443,12 +566,12 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="back-link">
             <a href="index.html">← Volver al Portfolio</a>
         </div>
     </div>
-    
+
     <script>
         // Menú real (frontend/data/burgers.json)
         const menuItems = [
@@ -472,10 +595,10 @@
             { key: "Vegana", display: "La Vegana", price: 10.40, icon: "🥬", ingredients: ["Hamburguesa vegana", "lechuga", "tomate", "cebolla", "pepinillo"] },
             { key: "Wazoski", display: "La Wazoski", price: 11.90, icon: "🍔", ingredients: ["Cheddar", "cebolla", "pepinillo"] }
         ];
-        
+
         let order = [];
         let currentExtras = [];
-        
+
         // Render menu
         function renderMenu() {
             const grid = document.getElementById('menuGrid');
@@ -487,24 +610,24 @@
                 </div>
             `).join('');
         }
-        
+
         async function simulateVoice(text) {
             const status = document.getElementById('voiceStatus');
             const voiceText = document.getElementById('voiceText');
-            
+
             status.classList.add('listening');
             voiceText.textContent = 'Escuchando...';
             await sleep(600);
-            
+
             status.classList.remove('listening');
             voiceText.textContent = `Detectado: "${text}"`;
-            
+
             await processCommand(text);
-            
+
             await sleep(1500);
             voiceText.textContent = 'Listo para siguiente comando...';
         }
-        
+
         async function processCommand(text) {
             const lower = text.toLowerCase();
 
@@ -531,7 +654,7 @@
                 addToOrder(menuItems.indexOf(match));
             }
         }
-        
+
         function addToOrder(index) {
             const item = menuItems[index];
             const orderItem = {
@@ -543,18 +666,18 @@
             currentExtras = [];
             updateOrderDisplay();
         }
-        
+
         function removeFromOrder(uniqueId) {
             order = order.filter(item => item.uniqueId !== uniqueId);
             updateOrderDisplay();
         }
-        
+
         function updateOrderDisplay() {
             const container = document.getElementById('orderItems');
             const countEl = document.getElementById('itemCount');
             const totalEl = document.getElementById('orderTotal');
             const sendBtn = document.getElementById('sendBtn');
-            
+
             if (order.length === 0) {
                 container.innerHTML = '<p style="color: #64748b; text-align: center; padding: 20px;">Sin items. Usa comandos de voz o haz clic en el menú.</p>';
                 countEl.textContent = '0 items';
@@ -562,7 +685,7 @@
                 sendBtn.disabled = true;
                 return;
             }
-            
+
             container.innerHTML = order.map(item => `
                 <div class="order-item">
                     <div class="order-item-info">
@@ -574,26 +697,26 @@
                     <button class="remove-btn" onclick="removeFromOrder(${item.uniqueId})">×</button>
                 </div>
             `).join('');
-            
+
             countEl.textContent = `${order.length} item${order.length !== 1 ? 's' : ''}`;
             const total = order.reduce((sum, item) => sum + item.price, 0);
             totalEl.textContent = `€${total.toFixed(2)}`;
             sendBtn.disabled = false;
         }
-        
+
         async function sendToKitchen() {
             if (order.length === 0) return;
-            
+
             const btn = document.getElementById('sendBtn');
             btn.textContent = 'Enviando...';
             await sleep(800);
-            
+
             const kitchenPanel = document.getElementById('kitchenPanel');
             const kitchenTicket = document.getElementById('kitchenTicket');
-            
+
             const total = order.reduce((sum, item) => sum + item.price, 0);
             const orderNum = document.getElementById('orderNumber').textContent;
-            
+
             kitchenTicket.innerHTML = `
                 <div class="kitchen-ticket">
                     <div class="ticket-header">
@@ -612,22 +735,23 @@
                     </div>
                 </div>
             `;
-            
+
             kitchenPanel.classList.add('show');
-            
+
             order = [];
             updateOrderDisplay();
             btn.textContent = 'Enviar a Cocina';
             btn.disabled = true;
-            
+
             document.getElementById('orderNumber').textContent = String(parseInt(orderNum) + 1).padStart(3, '0');
         }
-        
+
         function sleep(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
         }
-        
+
         renderMenu();
     </script>
 </body>
+
 </html>

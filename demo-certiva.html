@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Certiva Demo - Pipeline de Facturas</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
@@ -13,10 +19,12 @@
             min-height: 100vh;
             padding: 20px;
         }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
         }
+
         h1 {
             text-align: center;
             font-size: 2.2rem;
@@ -25,12 +33,13 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         .subtitle {
             text-align: center;
             color: #94a3b8;
             margin-bottom: 30px;
         }
-        
+
         /* Pipeline */
         .pipeline {
             display: flex;
@@ -40,6 +49,7 @@
             margin-bottom: 30px;
             flex-wrap: wrap;
         }
+
         .step {
             background: rgba(56, 189, 248, 0.1);
             border: 2px solid #38bdf8;
@@ -49,28 +59,33 @@
             transition: all 0.3s;
             min-width: 100px;
         }
+
         .step.active {
             background: rgba(56, 189, 248, 0.3);
             box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
             transform: scale(1.05);
         }
+
         .step.completed {
             background: rgba(34, 197, 94, 0.2);
             border-color: #22c55e;
         }
+
         .step-icon {
             font-size: 1.5rem;
             margin-bottom: 4px;
         }
+
         .step-label {
             font-size: 0.75rem;
             font-weight: 600;
         }
+
         .arrow {
             font-size: 1.2rem;
             color: #64748b;
         }
-        
+
         /* Grid */
         .demo-grid {
             display: grid;
@@ -78,26 +93,31 @@
             gap: 24px;
             margin-bottom: 24px;
         }
+
         @media (max-width: 900px) {
-            .demo-grid { grid-template-columns: 1fr; }
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
         }
-        
+
         .panel {
             background: rgba(30, 41, 59, 0.8);
             border-radius: 16px;
             padding: 24px;
             border: 1px solid rgba(148, 163, 184, 0.2);
         }
+
         .panel h2 {
             font-size: 1.1rem;
             margin-bottom: 16px;
             color: #38bdf8;
         }
-        
+
         /* Facturas de ejemplo (dataset demo) */
         .facturas-lista {
             margin-top: 16px;
         }
+
         .factura-item {
             display: flex;
             align-items: center;
@@ -110,20 +130,40 @@
             transition: all 0.2s;
             border: 2px solid transparent;
         }
+
         .factura-item:hover {
             border-color: #38bdf8;
             background: rgba(56, 189, 248, 0.1);
         }
+
         .factura-item.selected {
             border-color: #38bdf8;
             background: rgba(56, 189, 248, 0.2);
         }
-        .factura-icon { font-size: 1.3rem; }
-        .factura-info { flex: 1; }
-        .factura-nombre { font-weight: 600; font-size: 0.9rem; }
-        .factura-meta { font-size: 0.8rem; color: #94a3b8; }
-        .factura-importe { color: #38bdf8; font-weight: 600; }
-        
+
+        .factura-icon {
+            font-size: 1.3rem;
+        }
+
+        .factura-info {
+            flex: 1;
+        }
+
+        .factura-nombre {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .factura-meta {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        .factura-importe {
+            color: #38bdf8;
+            font-weight: 600;
+        }
+
         /* Terminal Log */
         .terminal {
             background: #0f172a;
@@ -134,18 +174,40 @@
             height: 350px;
             overflow-y: auto;
         }
+
         .log-line {
             margin-bottom: 6px;
             opacity: 0;
             animation: fadeIn 0.3s forwards;
         }
-        @keyframes fadeIn { to { opacity: 1; } }
-        .time { color: #64748b; margin-right: 8px; }
-        .info { color: #38bdf8; }
-        .success { color: #22c55e; }
-        .warning { color: #f59e0b; }
-        .error { color: #ef4444; }
-        
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .time {
+            color: #64748b;
+            margin-right: 8px;
+        }
+
+        .info {
+            color: #38bdf8;
+        }
+
+        .success {
+            color: #22c55e;
+        }
+
+        .warning {
+            color: #f59e0b;
+        }
+
+        .error {
+            color: #ef4444;
+        }
+
         /* Botón */
         .btn {
             width: 100%;
@@ -159,15 +221,17 @@
             margin-top: 16px;
             transition: all 0.2s;
         }
+
         .btn:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 4px 20px rgba(56, 189, 248, 0.4);
         }
+
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
-        
+
         /* Resultados */
         .resultado-panel {
             display: none;
@@ -177,22 +241,36 @@
             padding: 20px;
             margin-top: 24px;
         }
+
         .resultado-panel.show {
             display: block;
             animation: slideUp 0.5s;
         }
+
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        
+
         .resultado-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 16px;
         }
-        .resultado-titulo { color: #22c55e; font-weight: 600; }
+
+        .resultado-titulo {
+            color: #22c55e;
+            font-weight: 600;
+        }
+
         .confianza-badge {
             background: rgba(34, 197, 94, 0.2);
             color: #22c55e;
@@ -201,23 +279,34 @@
             font-size: 0.85rem;
             font-weight: 600;
         }
-        
+
         .datos-extraidos {
             background: rgba(15, 23, 42, 0.5);
             border-radius: 8px;
             padding: 16px;
             margin-bottom: 16px;
         }
+
         .dato-fila {
             display: flex;
             justify-content: space-between;
             padding: 6px 0;
             border-bottom: 1px solid rgba(148, 163, 184, 0.1);
         }
-        .dato-fila:last-child { border-bottom: none; }
-        .dato-label { color: #94a3b8; }
-        .dato-valor { color: #e2e8f0; font-weight: 500; }
-        
+
+        .dato-fila:last-child {
+            border-bottom: none;
+        }
+
+        .dato-label {
+            color: #94a3b8;
+        }
+
+        .dato-valor {
+            color: #e2e8f0;
+            font-weight: 500;
+        }
+
         /* CSV Preview */
         .csv-preview {
             background: #0f172a;
@@ -227,46 +316,56 @@
             font-size: 0.75rem;
             overflow-x: auto;
         }
+
         .csv-row {
             display: flex;
             gap: 16px;
             padding: 4px 0;
             border-bottom: 1px solid rgba(148, 163, 184, 0.1);
         }
-        .csv-header { color: #38bdf8; font-weight: 600; }
-        
+
+        .csv-header {
+            color: #38bdf8;
+            font-weight: 600;
+        }
+
         .back-link {
             text-align: center;
             margin-top: 30px;
         }
+
         .back-link a {
             color: #38bdf8;
             text-decoration: none;
         }
-        
+
         .stats-row {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
             margin-top: 16px;
         }
+
         .stat-box {
             background: rgba(15, 23, 42, 0.5);
             padding: 12px;
             border-radius: 8px;
             text-align: center;
         }
+
         .stat-valor {
             font-size: 1.4rem;
             font-weight: 700;
             color: #38bdf8;
         }
+
         .stat-etiqueta {
             font-size: 0.75rem;
             color: #94a3b8;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>🧾 Certiva - Pipeline de Facturas</h1>
@@ -274,7 +373,7 @@
         <p style="margin: 8px 0 18px; color: #94a3b8; font-size: 0.85rem;">
             ⚠️ Demo visual con datos simulados. Los nombres de archivo corresponden al dataset real.
         </p>
-        
+
         <!-- Pipeline -->
         <div class="pipeline">
             <div class="step" id="step-pdf">
@@ -302,7 +401,25 @@
                 <div class="step-label">CSV</div>
             </div>
         </div>
-        
+
+        <!-- TECHNICAL CONTEXT BADGE -->
+        <div
+            style="background: rgba(30, 41, 59, 0.8); border-left: 4px solid #38bdf8; padding: 15px; margin-bottom: 30px; border-radius: 0 8px 8px 0;">
+            <h3 style="color: #38bdf8; font-size: 0.95rem; margin-bottom: 5px;">🔧 Realidad del Pipeline (Python)</h3>
+            <p style="color: #cbd5e1; font-size: 0.85rem; line-height: 1.5;">
+                Esta demo ilustra el flujo de trabajo final. El <strong>código real de ingeniería</strong> (ver repo)
+                ejecuta un pipeline ETL contable robusto:
+            <ul style="margin-left: 20px; margin-top: 5px; color: #94a3b8;">
+                <li>Extracción OCR real con Azure Document Intelligence.</li>
+                <li>Validación de reglas de negocio específicas (Pydantic) para facturas españolas.</li>
+                <li>Mapeo automático a Plan General Contable y exportación a3innuva.</li>
+            </ul>
+            <a href="https://github.com/albertquerol12345/certiva" target="_blank"
+                style="color: #38bdf8; text-decoration: underline; margin-top: 5px; display: inline-block;">Ver código
+                del Pipeline en GitHub →</a>
+            </p>
+        </div>
+
         <div class="demo-grid">
             <!-- Panel izquierdo: Facturas -->
             <div class="panel">
@@ -343,7 +460,7 @@
                 </div>
                 <button class="btn" id="procesarBtn" onclick="procesarFactura()">Procesar Factura</button>
             </div>
-            
+
             <!-- Panel derecho: Terminal -->
             <div class="panel">
                 <h2>⚡ Log de Procesamiento</h2>
@@ -355,7 +472,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Resultados -->
         <div class="resultado-panel" id="resultadoPanel">
             <div class="resultado-header">
@@ -365,11 +482,11 @@
             <div style="color: #94a3b8; font-size: 0.8rem; margin-top: 6px;">
                 Valores de ejemplo (demo)
             </div>
-            
+
             <div class="datos-extraidos" id="datosExtraidos">
                 <!-- Se llena con JS -->
             </div>
-            
+
             <div class="stats-row">
                 <div class="stat-box">
                     <div class="stat-valor" id="statTiempo">2.4s</div>
@@ -384,7 +501,7 @@
                     <div class="stat-etiqueta">Auto-Post</div>
                 </div>
             </div>
-            
+
             <h3 style="margin-top: 24px; margin-bottom: 12px; color: #38bdf8; font-size: 0.95rem;">
                 📊 CSV Export (a3innuva-ready)
             </h3>
@@ -392,12 +509,12 @@
                 <!-- Se llena con JS -->
             </div>
         </div>
-        
+
         <div class="back-link">
             <a href="index.html">← Volver al Portfolio</a>
         </div>
     </div>
-    
+
     <script>
         // Datos simulados para la demo (archivos reales del dataset golden)
         const facturas = [
@@ -454,10 +571,10 @@
                 confianza: 94
             }
         ];
-        
+
         let facturaSeleccionada = 0;
         let procesando = false;
-        
+
         function selectFactura(index) {
             if (procesando) return;
             facturaSeleccionada = index;
@@ -465,58 +582,58 @@
                 el.classList.toggle('selected', i === index);
             });
         }
-        
+
         function addLog(mensaje, tipo = 'info', delay = 0) {
             return new Promise(resolve => {
                 setTimeout(() => {
                     const terminal = document.getElementById('terminal');
                     const hora = new Date().toLocaleTimeString('es-ES', { hour12: false });
                     const clase = tipo;
-                    
+
                     const linea = document.createElement('div');
                     linea.className = 'log-line';
                     linea.innerHTML = `<span class="time">${hora}</span><span class="${clase}">${mensaje}</span>`;
-                    
+
                     terminal.appendChild(linea);
                     terminal.scrollTop = terminal.scrollHeight;
                     resolve();
                 }, delay);
             });
         }
-        
+
         function setStepActive(stepId) {
             document.querySelectorAll('.step').forEach(step => {
                 step.classList.remove('active', 'completed');
             });
-            
+
             const steps = ['step-pdf', 'step-azure', 'step-rules', 'step-hitl', 'step-csv'];
             const currentIndex = steps.indexOf(stepId);
-            
+
             for (let i = 0; i < currentIndex; i++) {
                 document.getElementById(steps[i]).classList.add('completed');
             }
             document.getElementById(stepId).classList.add('active');
         }
-        
+
         async function procesarFactura() {
             if (procesando) return;
             procesando = true;
-            
+
             const btn = document.getElementById('procesarBtn');
             btn.disabled = true;
             btn.textContent = 'Procesando...';
-            
+
             const f = facturas[facturaSeleccionada];
-            
+
             // Limpiar
             document.getElementById('terminal').innerHTML = '';
             document.getElementById('resultadoPanel').classList.remove('show');
-            
+
             // Paso 1: PDF
             setStepActive('step-pdf');
             await addLog(`Cargando PDF: ${f.archivo}`, 'info', 300);
             await addLog(`SHA-256: ${generarHash()}`, 'info', 500);
-            
+
             // Paso 2: Azure OCR
             setStepActive('step-azure');
             await addLog('Inicializando Azure Form Recognizer...', 'info', 600);
@@ -525,7 +642,7 @@
             await addLog(`OCR Confianza: ${f.confianza}%`, 'success', 400);
             await addLog(`Detectado: Factura #${f.numero}`, 'info', 400);
             await addLog(`Proveedor: ${f.proveedor}`, 'info', 400);
-            
+
             // Paso 3: Reglas
             setStepActive('step-rules');
             await addLog('Validando formato NIF... ✓', 'success', 400);
@@ -533,27 +650,27 @@
             await addLog(`Categoría: ${f.categoria}`, 'info', 400);
             await addLog(`Cuenta contable: ${f.cuenta}`, 'info', 400);
             await addLog('Buscando duplicados... Ninguno encontrado', 'success', 500);
-            
+
             // Paso 4: HITL
             setStepActive('step-hitl');
             await addLog(`Confianza global: ${f.confianza}% > umbral (85%)`, 'success', 400);
             await addLog('✓ Documento aprobado para auto-post', 'success', 600);
-            
+
             // Paso 5: CSV
             setStepActive('step-csv');
             await addLog('Generando asientos contables...', 'info', 500);
             await addLog('Exportando a CSV (formato a3innuva)...', 'info', 600);
             await addLog('Escribiendo audit trail en SQLite...', 'info', 400);
             await addLog('✓ Procesamiento completado', 'success', 300);
-            
+
             // Mostrar resultados
             mostrarResultados(f);
-            
+
             btn.disabled = false;
             btn.textContent = 'Procesar Otra Factura';
             procesando = false;
         }
-        
+
         function mostrarResultados(f) {
             // Datos extraídos
             document.getElementById('datosExtraidos').innerHTML = `
@@ -586,7 +703,7 @@
                     <span class="dato-valor" style="color: #38bdf8; font-size: 1.1rem;">${f.total.toFixed(2)}€</span>
                 </div>
             `;
-            
+
             // CSV
             document.getElementById('csvPreview').innerHTML = `
                 <div class="csv-row">
@@ -622,19 +739,20 @@
                     <span>${f.total.toFixed(2)}</span>
                 </div>
             `;
-            
+
             // Stats
             document.getElementById('confianzaBadge').textContent = `${f.confianza}% Confianza`;
             document.getElementById('statConfianza').textContent = `${f.confianza}%`;
             document.getElementById('statTiempo').textContent = (2.0 + Math.random()).toFixed(1) + 's';
-            
+
             // Mostrar panel
             document.getElementById('resultadoPanel').classList.add('show');
         }
-        
+
         function generarHash() {
             return Array(16).fill(0).map(() => Math.floor(Math.random() * 16).toString(16)).join('');
         }
     </script>
 </body>
+
 </html>

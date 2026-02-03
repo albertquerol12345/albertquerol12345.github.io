@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vision Pipeline Demo - Procesamiento de Imágenes</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'JetBrains Mono', 'Consolas', monospace;
             background: #0d1117;
@@ -13,32 +19,39 @@
             min-height: 100vh;
             padding: 20px;
         }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
         }
+
         h1 {
             text-align: center;
             font-size: 2rem;
             margin-bottom: 8px;
             color: #7ee787;
         }
+
         .subtitle {
             text-align: center;
             color: #8b949e;
             margin-bottom: 30px;
             font-family: system-ui, sans-serif;
         }
-        
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 15px;
             margin: 30px 0;
         }
+
         @media (max-width: 768px) {
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
+
         .stat-card {
             background: #161b22;
             border: 1px solid #30363d;
@@ -46,25 +59,28 @@
             padding: 16px;
             text-align: center;
         }
+
         .stat-value {
             font-size: 1.6rem;
             font-weight: bold;
             color: #7ee787;
         }
+
         .stat-label {
             font-size: 0.75rem;
             color: #8b949e;
             margin-top: 4px;
             font-family: system-ui, sans-serif;
         }
-        
+
         .terminal {
             background: #161b22;
             border: 1px solid #30363d;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
         }
+
         .terminal-header {
             background: #21262d;
             padding: 12px 16px;
@@ -73,38 +89,71 @@
             gap: 8px;
             border-bottom: 1px solid #30363d;
         }
+
         .terminal-btn {
             width: 12px;
             height: 12px;
             border-radius: 50%;
         }
-        .terminal-btn.red { background: #ff5f56; }
-        .terminal-btn.yellow { background: #ffbd2e; }
-        .terminal-btn.green { background: #27c93f; }
+
+        .terminal-btn.red {
+            background: #ff5f56;
+        }
+
+        .terminal-btn.yellow {
+            background: #ffbd2e;
+        }
+
+        .terminal-btn.green {
+            background: #27c93f;
+        }
+
         .terminal-title {
             margin-left: 10px;
             font-size: 0.8rem;
             color: #8b949e;
         }
+
         .terminal-body {
             padding: 20px;
             font-size: 0.85rem;
             line-height: 1.6;
             min-height: 350px;
         }
-        
+
         .log-line {
             margin-bottom: 6px;
             opacity: 0;
             animation: fadeIn 0.3s forwards;
         }
-        @keyframes fadeIn { to { opacity: 1; } }
-        .time { color: #64748b; margin-right: 8px; }
-        .info { color: #79c0ff; }
-        .success { color: #7ee787; }
-        .warning { color: #ffa657; }
-        .highlight { color: #d2a8ff; }
-        
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .time {
+            color: #64748b;
+            margin-right: 8px;
+        }
+
+        .info {
+            color: #79c0ff;
+        }
+
+        .success {
+            color: #7ee787;
+        }
+
+        .warning {
+            color: #ffa657;
+        }
+
+        .highlight {
+            color: #d2a8ff;
+        }
+
         .progress-container {
             margin: 10px 0;
             background: #21262d;
@@ -112,6 +161,7 @@
             height: 18px;
             overflow: hidden;
         }
+
         .progress-bar {
             height: 100%;
             background: linear-gradient(90deg, #238636, #7ee787);
@@ -125,13 +175,14 @@
             color: white;
             font-weight: bold;
         }
-        
+
         .controls {
             display: flex;
             gap: 15px;
             justify-content: center;
             margin: 30px 0;
         }
+
         .btn {
             background: #238636;
             color: white;
@@ -143,21 +194,25 @@
             cursor: pointer;
             transition: all 0.2s;
         }
+
         .btn:hover:not(:disabled) {
             background: #2ea043;
             transform: translateY(-2px);
         }
+
         .btn:disabled {
             background: #30363d;
             cursor: not-allowed;
         }
+
         .btn.secondary {
             background: #1f6feb;
         }
+
         .btn.secondary:hover {
             background: #388bfd;
         }
-        
+
         .csv-panel {
             background: #161b22;
             border: 1px solid #30363d;
@@ -166,22 +221,36 @@
             margin-top: 20px;
             display: none;
         }
+
         .csv-panel.show {
             display: block;
             animation: slideUp 0.5s;
         }
+
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        
+
         .csv-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
         }
-        .csv-title { color: #79c0ff; font-weight: bold; }
+
+        .csv-title {
+            color: #79c0ff;
+            font-weight: bold;
+        }
+
         .csv-badge {
             background: rgba(34, 197, 94, 0.2);
             color: #7ee787;
@@ -189,11 +258,13 @@
             border-radius: 20px;
             font-size: 0.8rem;
         }
+
         .csv-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.8rem;
         }
+
         .csv-table th {
             background: #21262d;
             padding: 10px;
@@ -201,17 +272,19 @@
             color: #79c0ff;
             font-weight: 600;
         }
+
         .csv-table td {
             padding: 10px;
             border-bottom: 1px solid #30363d;
         }
+
         .desc-cell {
             max-width: 350px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-        
+
         .cost-panel {
             background: linear-gradient(135deg, rgba(31, 111, 235, 0.1), rgba(121, 192, 255, 0.1));
             border: 1px solid #1f6feb;
@@ -220,47 +293,58 @@
             margin-top: 20px;
             display: none;
         }
-        .cost-panel.show { display: block; }
+
+        .cost-panel.show {
+            display: block;
+        }
+
         .cost-title {
             color: #79c0ff;
             font-weight: bold;
             margin-bottom: 15px;
             font-family: system-ui, sans-serif;
         }
+
         .cost-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 15px;
         }
+
         .cost-item {
             text-align: center;
         }
+
         .cost-value {
             font-size: 1.2rem;
             font-weight: bold;
             color: #e3b341;
         }
+
         .cost-label {
             font-size: 0.75rem;
             color: #8b949e;
             font-family: system-ui, sans-serif;
         }
+
         .cost-total {
             text-align: center;
             margin-top: 15px;
             padding-top: 15px;
             border-top: 1px solid #30363d;
         }
+
         .cost-total-value {
             font-size: 1.8rem;
             font-weight: bold;
             color: #7ee787;
         }
-        
+
         .back-link {
             text-align: center;
             margin-top: 30px;
         }
+
         .back-link a {
             color: #79c0ff;
             text-decoration: none;
@@ -268,6 +352,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>🖼️ Vision Pipeline</h1>
@@ -275,7 +360,7 @@
         <p style="margin: 6px 0 18px; color: #8b949e; font-size: 0.85rem;">
             Demo con 2 imágenes del dataset incluido en el repo.
         </p>
-        
+
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-value" id="statTotal">2</div>
@@ -294,7 +379,25 @@
                 <div class="stat-label">Coste (ver CLI)</div>
             </div>
         </div>
-        
+
+        <!-- TECHNICAL CONTEXT BADGE -->
+        <div
+            style="background: #161b22; border-left: 4px solid #7ee787; padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0;">
+            <h3 style="color: #7ee787; font-size: 0.95rem; margin-bottom: 5px;">🔧 Arquitectura Real (Python)</h3>
+            <p style="color: #c9d1d9; font-size: 0.85rem; line-height: 1.5;">
+                Esta terminal web es una <strong>simulación visual</strong>. El pipeline real (disponible en el repo)
+                ejecuta lógica compleja de ingeniería de datos:
+            <ul style="margin-left: 20px; margin-top: 5px; color: #8b949e;">
+                <li>Gestión de <strong>Rate Limits</strong> y Backoff exponencial contra OpenAI API.</li>
+                <li>Cálculo real de costes por token (Input/Output).</li>
+                <li>Serialización robusta a CSV y manejo de errores de red.</li>
+            </ul>
+            <a href="https://github.com/albertquerol12345/vision-descr-pipeline" target="_blank"
+                style="color: #79c0ff; text-decoration: underline; margin-top: 5px; display: inline-block;">Ver código
+                del Pipeline en GitHub →</a>
+            </p>
+        </div>
+
         <div class="terminal">
             <div class="terminal-header">
                 <div class="terminal-btn red"></div>
@@ -309,13 +412,14 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="controls">
             <button class="btn" id="startBtn" onclick="startDemo()">Iniciar Procesamiento</button>
-            <button class="btn secondary" id="resumeBtn" onclick="simulateResume()" disabled>Simular Interrupción</button>
+            <button class="btn secondary" id="resumeBtn" onclick="simulateResume()" disabled>Simular
+                Interrupción</button>
             <button class="btn" onclick="resetDemo()">Reiniciar</button>
         </div>
-        
+
         <div class="csv-panel" id="csvPanel">
             <div class="csv-header">
                 <span class="csv-title">📄 creatives_master.csv</span>
@@ -333,7 +437,7 @@
                 <tbody id="csvBody"></tbody>
             </table>
         </div>
-        
+
         <div class="cost-panel" id="costPanel">
             <div class="cost-title">💰 Estimación de Coste (se calcula en el CLI real)</div>
             <div class="cost-grid">
@@ -355,18 +459,18 @@
                 <div class="cost-label">Coste estimado en CLI (resume-stats)</div>
             </div>
         </div>
-        
+
         <div class="back-link">
             <a href="index.html">← Volver al Portfolio</a>
         </div>
     </div>
-    
+
     <script>
         const totalImages = 2;
         let processedCount = 0;
         let isProcessing = false;
         let isPaused = false;
-        
+
         const sampleData = [
             {
                 id: 'sample_001',
@@ -381,7 +485,7 @@
                 tokens: 42
             }
         ];
-        
+
         function addLog(html, delay = 0) {
             return new Promise(resolve => {
                 setTimeout(() => {
@@ -395,49 +499,49 @@
                 }, delay);
             });
         }
-        
+
         async function startDemo() {
             if (isProcessing) return;
             isProcessing = true;
-            
+
             document.getElementById('startBtn').disabled = true;
             document.getElementById('resumeBtn').disabled = false;
             document.getElementById('csvPanel').style.display = 'none';
             document.getElementById('costPanel').style.display = 'none';
-            
+
             await addLog(`<span class="info">Cargando config.toml...</span>`, 300);
             await addLog(`<span class="info">Encontradas ${totalImages} imágenes para procesar</span>`, 400);
             await addLog(`<span style="color: #8b949e;">Objetivo configurable: 80-100 palabras (config.toml)</span>`, 200);
             await addLog(`<span style="color: #8b949e;">Checkpoint: Cada 5 filas</span>`, 200);
             await addLog(``, 100);
-            
+
             for (let i = processedCount; i < totalImages; i++) {
                 if (isPaused) {
                     await addLog(`<span class="warning">⚠ Interrumpido por usuario (Ctrl+C)</span>`, 0);
                     await addLog(`<span class="info">💾 Checkpoint guardado: ${i}/${totalImages} procesadas</span>`, 100);
                     break;
                 }
-                
+
                 const delay = 200 + Math.random() * 300;
                 await sleep(delay);
-                
+
                 const isCheckpoint = (i + 1) % 5 === 0;
                 const data = sampleData[i % sampleData.length];
-                
+
                 await addLog(`<span class="success">✓</span> <span class="highlight">${data.id}.png</span> → ${data.words} palabras (${data.tokens} tokens)`, 0);
-                
+
                 if (isCheckpoint) {
-                    await addLog(`<span class="info">  💾 Checkpoint guardado (${i+1}/${totalImages})</span>`, 100);
+                    await addLog(`<span class="info">  💾 Checkpoint guardado (${i + 1}/${totalImages})</span>`, 100);
                 }
-                
+
                 processedCount = i + 1;
                 updateStats();
-                
+
                 if (i < 5) {
                     addToCSV(data, i);
                 }
             }
-            
+
             if (!isPaused && processedCount === totalImages) {
                 await addLog(``, 200);
                 await addLog(`<span class="success">✓ ¡Procesamiento completado!</span>`, 100);
@@ -447,18 +551,18 @@
                 document.getElementById('costPanel').style.display = 'block';
                 document.getElementById('resumeBtn').disabled = true;
             }
-            
+
             isProcessing = false;
             document.getElementById('startBtn').disabled = false;
         }
-        
+
         async function simulateResume() {
             if (!isProcessing) return;
             isPaused = true;
             document.getElementById('resumeBtn').disabled = true;
-            
+
             await sleep(1500);
-            
+
             isPaused = false;
             isProcessing = false;
             await addLog(``, 300);
@@ -466,10 +570,10 @@
             await addLog(`<span class="info">Reanudando desde checkpoint...</span>`, 400);
             await addLog(`<span class="info">Saltando ${processedCount} imágenes ya procesadas</span>`, 400);
             await addLog(``, 200);
-            
+
             startDemo();
         }
-        
+
         function addToCSV(data, index) {
             const tbody = document.getElementById('csvBody');
             const row = document.createElement('tr');
@@ -481,19 +585,19 @@
             `;
             tbody.appendChild(row);
         }
-        
+
         function updateStats() {
             document.getElementById('statProcessed').textContent = processedCount;
             document.getElementById('statRemaining').textContent = totalImages - processedCount;
-            
+
             document.getElementById('statCost').textContent = '—';
         }
-        
+
         function resetDemo() {
             processedCount = 0;
             isProcessing = false;
             isPaused = false;
-            
+
             document.getElementById('terminalBody').innerHTML = `
                 <div style="margin-bottom: 8px;">
                     <span style="color: #7ee787;">$ </span>
@@ -505,15 +609,16 @@
             document.getElementById('costPanel').style.display = 'none';
             document.getElementById('startBtn').disabled = false;
             document.getElementById('resumeBtn').disabled = true;
-            
+
             updateStats();
         }
-        
+
         function sleep(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
         }
-        
+
         updateStats();
     </script>
 </body>
+
 </html>
